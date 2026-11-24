@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>NusaWebGame v1.4 — Studio Kreator Tanpa Coding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lucide@1/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --bg:#ffffff; --card:#f4f8ff; --card2:#e8f0fe; --text:#0f2747; --muted:#5b7290;
+  --accent:#2563eb; --accent-soft:rgba(37,99,235,.10); --accent2:#0ea5e9; --accent2-soft:rgba(14,165,233,.10);
+  --border:#bfdbfe; --gold:#facc15; --gold-soft:rgba(250,204,21,.18); --green:#16a34a; --red:#dc2626;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'Red Hat Display',system-ui,sans-serif;color:var(--text);background:var(--bg);min-height:100vh}
+.hidden{display:none!important}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit}
+
+/* Intro */
+#intro{position:fixed;inset:0;z-index:60;background:linear-gradient(180deg,#ffffff 0%,#eaf3ff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;transition:opacity .45s ease;text-align:center}
+#intro.done{opacity:0;pointer-events:none}
+.intro-logo{width:88px;height:88px;border-radius:24px;background:var(--accent);display:grid;place-items:center;color:#fff;box-shadow:0 14px 34px rgba(37,99,235,.35)}
+.intro-logo i{width:44px;height:44px}
+#introTitle{font-size:1.7rem;font-weight:800}
+#introVer{color:var(--accent);font-weight:700;font-size:.85rem;letter-spacing:1px}
+.intro-tagline{font-size:1.05rem;font-weight:700;color:var(--text);max-width:320px}
+.intro-sub{color:var(--muted);font-size:.85rem;max-width:340px;line-height:1.55}
+.intro-bar{width:min(320px,80vw);height:8px;border-radius:99px;background:var(--card2);overflow:hidden}
+.intro-bar i{display:block;height:100%;width:0%;background:var(--accent);transition:width .15s linear}
+#introPct{color:var(--muted);font-size:.82rem;font-variant-numeric:tabular-nums}
+
+/* Shell */
+#app{max-width:760px;margin:0 auto;padding:0 14px 110px}
+.app-hidden{display:none}
+header.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 2px;background:linear-gradient(var(--bg) 82%,transparent)}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:38px;height:38px;border-radius:11px;background:var(--accent);color:#fff;display:grid;place-items:center}
+.brand-mark i{width:20px;height:20px}
+.brand-name{font-weight:800;font-size:1.02rem;line-height:1.1}
+.brand-sub{font-size:.68rem;color:var(--muted)}
+.top-actions{display:flex;align-items:center;gap:8px}
+.coin-chip{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:99px;padding:6px 12px 6px 8px;font-weight:700;font-variant-numeric:tabular-nums}
+.badge-pro{display:flex;align-items:center;gap:5px;border-radius:99px;padding:6px 11px;font-size:.7rem;font-weight:800;letter-spacing:.5px}
+.badge-pro.gold{background:var(--gold-soft);border:1px solid var(--gold);color:#92600a}
+.badge-pro.free{background:var(--card);border:1px solid var(--border);color:var(--muted)}
+.pro-timer{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px}
+.pro-timer .chip{background:var(--gold-soft);border:1px solid var(--gold);border-radius:11px;padding:7px 10px;text-align:center;min-width:56px}
+.pro-timer .chip b{display:block;font-size:1.02rem;font-weight:800;color:#92600a;font-variant-numeric:tabular-nums;line-height:1.1}
+.pro-timer .chip span{font-size:.6rem;color:#92600a;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.pro-timer .perm{display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:800;color:#92600a;background:var(--gold-soft);border:1px solid var(--gold);border-radius:99px;padding:8px 13px}
+.pro-timer-note{font-size:.7rem;color:var(--muted);width:100%;line-height:1.5}
+
+.page{display:none}
+.page.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.section{margin-top:20px}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
+.section-head h2{font-size:1.02rem;font-weight:800;display:flex;align-items:center;gap:8px}
+.section-head h2 i{width:18px;height:18px;color:var(--accent)}
+.section-head .hint{font-size:.72rem;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:15px;margin-bottom:13px}
+.eyebrow{font-size:.7rem;text-transform:uppercase;letter-spacing:1.3px;color:var(--accent);font-weight:800;margin-bottom:6px}
+
+/* Banner statis */
+.banner{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:18px;padding:22px 18px;margin-top:14px;text-align:center}
+.banner h1{font-size:1.35rem;font-weight:800;margin-bottom:8px}
+.banner p{font-size:.84rem;opacity:.92;line-height:1.55;margin-bottom:14px}
+
+/* Tabs */
+.mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px}
+.mode-tab{display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:14px;border-radius:15px;background:var(--card);border:1px solid var(--border);text-align:left}
+.mode-tab i{width:22px;height:22px;color:var(--accent)}
+.mode-tab .mt-title{font-weight:800;font-size:.92rem}
+.mode-tab .mt-sub{font-size:.72rem;color:var(--muted)}
+.mode-tab.active{border-color:var(--accent);background:var(--accent-soft)}
+
+label.field-label{display:block;font-size:.8rem;font-weight:700;color:var(--muted);margin:12px 0 6px}
+textarea,#codeEditor,input.text,select.text{width:100%;background:#fff;border:1px solid var(--border);border-radius:12px;color:var(--text);padding:11px;font-size:.9rem;outline:none}
+textarea:focus,#codeEditor:focus,input.text:focus,select.text:focus{border-color:var(--accent)}
+textarea{min-height:92px;resize:vertical}
+#codeEditor{min-height:190px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;line-height:1.5}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:7px 12px;border-radius:99px;border:1px solid var(--border);background:#fff;font-size:.78rem;color:var(--muted)}
+.chip.active{border-color:var(--accent);color:var(--accent);background:var(--accent-soft);font-weight:700}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.swatch{width:28px;height:28px;border-radius:50%;border:2px solid transparent}
+.swatch.active{border-color:var(--accent);transform:scale(1.12)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;padding:11px 16px;font-weight:700;font-size:.9rem;transition:transform .15s}
+.btn:active{transform:scale(.98)}
+.btn i{width:16px;height:16px}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.primary:disabled{opacity:.45;cursor:not-allowed}
+.btn.gold{background:var(--gold);color:#4a3403}
+.btn.secondary{background:#fff;border:1px solid var(--border);color:var(--text)}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn.small{padding:8px 12px;font-size:.78rem;border-radius:10px}
+.btn.wide{width:100%}
+.btn-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
+
+/* Progress */
+.progress-wrap{margin-top:13px;padding:14px;border:1px solid var(--border);border-radius:14px;background:#fff}
+.progress-meta{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:8px}
+.progress-track{height:10px;border-radius:99px;background:var(--card2);overflow:hidden}
+.progress-track i{display:block;height:100%;width:0%;background:var(--accent);border-radius:99px}
+.progress-status{margin-top:9px;font-size:.82rem}
+.result-box{margin-top:13px;padding:14px;border:1px solid var(--accent2);border-radius:14px;background:var(--accent2-soft)}
+.result-link{font-family:ui-monospace,Menlo,monospace;font-size:.76rem;word-break:break-all;color:var(--accent)}
+
+/* Tools grid */
+.tools-cat{font-weight:800;font-size:.88rem;margin:16px 0 9px;display:flex;align-items:center;gap:8px}
+.tools-cat i{width:16px;height:16px;color:var(--accent)}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px}
+.tool-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;text-align:left;position:relative}
+.tool-card:active{transform:scale(.98)}
+.tool-card .t-icon{width:34px;height:34px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.tool-card .t-icon i{width:18px;height:18px}
+.tool-card .t-name{font-weight:700;font-size:.82rem;line-height:1.3}
+.tool-card .t-lock{position:absolute;top:10px;right:10px;color:#b45309}
+.tool-card .t-lock i{width:15px;height:15px}
+.tool-card.locked{background:var(--card)}
+
+/* Wallet */
+.balance-hero{display:flex;align-items:center;gap:14px}
+.pkg-grid{display:grid;gap:12px}
+.pkg{background:#fff;border:1px solid var(--border);border-radius:16px;padding:15px;position:relative}
+.pkg.featured{border-color:var(--gold)}
+.flag{position:absolute;top:12px;right:12px;font-size:.64rem;font-weight:800;padding:3px 8px;border-radius:99px;background:var(--gold-soft);color:#92600a}
+.pkg-name{font-weight:800;display:flex;align-items:center;gap:8px}
+.pkg-stars{font-size:1.35rem;font-weight:800;margin:6px 0 2px}
+.pkg-price{color:var(--accent);font-weight:700}
+.pkg-note{font-size:.74rem;color:var(--muted);margin-top:6px;line-height:1.5}
+.pkg-quota{font-size:.73rem;color:#92600a;margin-top:6px;font-weight:600}
+.pkg-quota.done{color:var(--red)}
+.redeem-row{display:flex;gap:8px;margin-top:10px}
+.redeem-row input{flex:1}
+.redeem-privacy{margin-top:12px;padding:11px 13px;border:1px solid #fde68a;border-radius:12px;background:#fffbeb;color:#92400e;font-size:.78rem;line-height:1.6}
+.redeem-privacy strong{display:block;margin-bottom:3px}
+
+/* Games */
+.game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px}
+.game-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px;display:flex;flex-direction:column;gap:7px}
+.game-card .g-icon{width:34px;height:34px;border-radius:10px;background:var(--accent2-soft);color:var(--accent2);display:grid;place-items:center}
+.game-card .g-icon i{width:18px;height:18px}
+.game-card .g-name{font-weight:700;font-size:.84rem}
+.game-card .g-desc{font-size:.72rem;color:var(--muted);line-height:1.45;flex:1}
+.game-card .g-meta{font-size:.7rem;color:var(--accent);font-weight:700}
+
+/* History */
+.hist-item{background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px;margin-bottom:10px}
+.hist-top{display:flex;justify-content:space-between;gap:10px}
+.hist-title{font-weight:700;font-size:.86rem;word-break:break-word}
+.hist-meta{font-size:.73rem;color:var(--muted);margin-top:5px;display:flex;flex-wrap:wrap;gap:10px}
+.tag{font-size:.67rem;font-weight:700;padding:3px 8px;border-radius:99px}
+.tag.ai{background:var(--accent-soft);color:var(--accent)}
+.tag.code{background:var(--accent2-soft);color:var(--accent2)}
+.empty{text-align:center;color:var(--muted);padding:32px 14px;font-size:.84rem}
+.empty i{width:32px;height:32px;margin-bottom:8px;opacity:.55}
+
+/* Profile */
+.profile-head{display:flex;align-items:center;gap:15px}
+.avatar{width:62px;height:62px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:1.5rem;font-weight:800;flex:0 0 auto}
+.p-name{font-size:1.1rem;font-weight:800;border:none;background:transparent;outline:none;width:100%;color:var(--text)}
+.p-since{font-size:.73rem;color:var(--muted);margin-top:3px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:13px;padding:12px}
+.stat dt{font-size:.69rem;color:var(--muted)}
+.stat dd{font-size:1.1rem;font-weight:800;margin-top:4px}
+
+/* Bottom nav */
+#bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:30;max-width:760px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-top:1px solid var(--border);padding:7px 6px calc(7px + env(safe-area-inset-bottom))}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 0;color:var(--muted);font-size:.67rem;font-weight:600}
+.nav-btn i{width:20px;height:20px}
+.nav-btn.active{color:var(--accent)}
+
+/* Modal */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(15,39,71,.42);display:flex;align-items:center;justify-content:center;padding:15px}
+.modal-box{width:100%;max-width:480px;max-height:88vh;overflow:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:17px}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.modal-head h3{font-size:1.02rem;display:flex;align-items:center;gap:9px}
+.modal-head h3 i{width:18px;height:18px;color:var(--accent)}
+.modal-close{width:31px;height:31px;border-radius:10px;background:#fff;border:1px solid var(--border);display:grid;place-items:center;color:var(--muted)}
+.modal-close i{width:16px;height:16px}
+.tool-out{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px;margin-top:10px;font-size:.84rem;min-height:42px}
+.tool-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.tool-row input,.tool-row select{flex:1;min-width:110px}
+.num-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.num-grid button{background:#fff;border:1px solid var(--border);border-radius:11px;padding:13px 0;font-weight:700;font-size:1rem}
+.num-grid button.op{background:var(--accent-soft);color:var(--accent)}
+.ttt-board{display:grid;grid-template-columns:repeat(3,70px);gap:7px;justify-content:center}
+.ttt-cell{width:70px;height:70px;border-radius:13px;background:#fff;border:1px solid var(--border);font-size:1.8rem;font-weight:800;display:grid;place-items:center}
+.ttt-cell.win{background:var(--accent-soft);border-color:var(--accent)}
+.mem-grid{display:grid;grid-template-columns:repeat(4,54px);gap:7px;justify-content:center}
+.mem-card{width:54px;height:54px;border-radius:11px;background:var(--card2);border:1px solid var(--border);font-size:1.15rem;font-weight:800;color:transparent}
+.mem-card.flipped{color:var(--text);background:#fff}
+.mem-card.matched{background:var(--gold-soft);border-color:var(--gold);color:#92600a}
+.dice-row{display:flex;gap:24px;justify-content:center}
+.dice{width:70px;height:70px;border-radius:15px;background:#fff;border:1px solid var(--border);display:grid;place-items:center;font-size:1.9rem;font-weight:800}
+.dice.rolling{animation:shake .5s}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-14deg)}75%{transform:rotate(14deg)}}
+#sketchCanvas{background:#fff;border:1px solid var(--border);border-radius:12px;touch-action:none;display:block;width:100%}
+#snakeCanvas{background:#fff;border:1px solid var(--border);border-radius:12px;touch-action:none}
+.dpad{display:grid;grid-template-columns:repeat(3,52px);gap:6px;justify-content:center}
+.dpad button{height:42px;border-radius:11px;background:#fff;border:1px solid var(--border);display:grid;place-items:center}
+.dpad button i{width:18px;height:18px}
+.quiz-opt{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--border);border-radius:11px;padding:11px 13px;margin-top:8px;font-size:.85rem}
+.quiz-opt.correct{background:var(--green);color:#fff;border-color:var(--green)}
+.quiz-opt.wrong{background:#fde2e2;color:var(--red);border-color:var(--red)}
+code.inline{background:var(--card2);padding:2px 6px;border-radius:6px;font-family:ui-monospace,Menlo,monospace;font-size:.78rem}
+
+#toastRoot{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:80;display:flex;flex-direction:column;gap:8px;width:min(92vw,420px)}
+.toast{background:var(--text);color:#fff;border-radius:12px;padding:11px 14px;font-size:.83rem;box-shadow:0 10px 30px rgba(15,39,71,.25);animation:toastIn .25s ease}
+.toast.ok{background:var(--green)}
+.toast.err{background:var(--red)}
+@keyframes toastIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+footer{text-align:center;color:var(--muted);font-size:.71rem;padding:24px 10px 6px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div id="intro">
+  <div class="intro-logo"><i data-lucide="gamepad-2"></i></div>
+  <div id="introTitle">Welcome to NusaWebGame</div>
+  <div id="introVer">VERSI 1.4</div>
+  <div class="intro-tagline">Berkreasi, Berinovasi, Wujudkan Karyamu!</div>
+  <p class="intro-sub">Buat game dan aplikasi tanpa AI, tanpa menunggu lama. Semua diproses langsung di perangkatmu, lalu siap diunduh sebagai file index.html.</p>
+  <div class="intro-bar"><i id="introBar"></i></div>
+  <div id="introPct">0%</div>
+  <button class="btn primary" id="introEnter"><i data-lucide="play"></i> Masuk & Mulai Berkreasi</button>
+</div>
+
+<!-- APP -->
+<div id="app" class="app-hidden">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark"><i data-lucide="gamepad-2"></i></div>
+      <div><div class="brand-name">NusaWebGame</div><div class="brand-sub">Studio Kreator · v1.4</div></div>
+    </div>
+    <div class="top-actions">
+      <div class="coin-chip" id="headerCoin"></div>
+      <div id="headerBadge"></div>
+    </div>
+  </header>
+
+  <main>
+    <!-- BERANDA -->
+    <section class="page active" id="page-beranda">
+      <div class="banner">
+        <h1 id="greetName">Berkreasi, Berinovasi, Wujudkan Karyamu!</h1>
+        <p>Tulis idemu, pilih alatnya, dan terbitkan hasilnya. Tanpa AI — dikerjakan langsung di perangkatmu, lalu unduh sebagai index.html.</p>
+        <button class="btn gold" id="bannerCta"><i data-lucide="sparkles"></i> Buat Game atau Aplikasi Sekarang</button>
+      </div>
+
+      <div class="section">
+        <div class="mode-tabs">
+          <button class="mode-tab active" data-mode="tanpa"><i data-lucide="wand-sparkles"></i><span class="mt-title">Tanpa Coding</span><span class="mt-sub">Isi deskripsi, hasil langsung jadi</span></button>
+          <button class="mode-tab" data-mode="dengan"><i data-lucide="code-2"></i><span class="mt-title">Dengan Coding</span><span class="mt-sub">HTML · CSS · JS · Python · JSON · SVG</span></button>
+        </div>
+
+        <div class="card" id="panelTanpa">
+          <div class="eyebrow">Generator Tanpa AI</div>
+          <label class="field-label" for="descInput">Ceritakan game / aplikasi yang kamu mau</label>
+          <textarea id="descInput" placeholder="Contoh: Buatkan game 3D sederhana mobil mengumpulkan koin..."></textarea>
+          <label class="field-label">Tingkat kesulitan</label>
+          <div class="chips" id="diffChips">
+            <button class="chip active" data-diff="simple">Sederhana · ±30 detik</button>
+            <button class="chip" data-diff="medium">Sedang · ±45 detik</button>
+            <button class="chip" data-diff="complex">Kompleks · ±60 detik</button>
+          </div>
+          <label class="field-label">Tema warna awal</label>
+          <div class="swatches" id="themeSwatches">
+            <button class="swatch active" data-theme="#2563eb" style="background:#2563eb"></button>
+            <button class="swatch" data-theme="#7c3aed" style="background:#7c3aed"></button>
+            <button class="swatch" data-theme="#16a34a" style="background:#16a34a"></button>
+            <button class="swatch" data-theme="#ea580c" style="background:#ea580c"></button>
+          </div>
+          <div class="btn-row"><button class="btn primary" id="btnGenerate"><i data-lucide="sparkles"></i> Buat Sekarang · 15 Kredit</button></div>
+          <div class="progress-wrap hidden" id="genProgress">
+            <div class="progress-meta"><span id="genEstimate">Diproses di perangkatmu sendiri (tanpa AI)</span><span id="genPct">0%</span></div>
+            <div class="progress-track"><i id="genBar"></i></div>
+            <div class="progress-status" id="genStatus">Menyiapkan berkas index.html...</div>
+          </div>
+          <div class="result-box hidden" id="genResult">
+            <div style="font-weight:800;margin-bottom:6px">Selesai! Berkas bernama index.html siap diunduh</div>
+            <div class="result-link" id="genLink"></div>
+            <div class="btn-row">
+              <button class="btn primary small" id="btnGenDownload"><i data-lucide="download"></i> Unduh index.html</button>
+              <button class="btn secondary small" id="btnGenShare"><i data-lucide="share-2"></i> Bagikan</button>
+              <button class="btn ghost small" id="btnGenNew">Buat Baru</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card hidden" id="panelDengan">
+          <div class="eyebrow">Editor Multi Bahasa</div>
+          <div class="tool-row" style="margin:0 0 10px">
+            <select class="text" id="langSelect">
+              <option value="html">HTML — halaman utama (index.html)</option>
+              <option value="css">CSS — gaya tampilan (style.css)</option>
+              <option value="js">JavaScript — fungsi (app.js)</option>
+              <option value="py">Python — logika (contoh.py)</option>
+              <option value="json">JSON — data (data.json)</option>
+              <option value="svg">SVG — gambar ikon (ikon.svg)</option>
+            </select>
+          </div>
+          <textarea id="codeEditor" spellcheck="false"></textarea>
+          <div class="btn-row">
+            <button class="btn secondary small" id="btnPreview"><i data-lucide="eye"></i> Pratinjau</button>
+            <button class="btn secondary small" id="btnCopy"><i data-lucide="copy"></i> Salin</button>
+            <button class="btn secondary small" id="btnCheck"><i data-lucide="shield-check"></i> Cek Kode</button>
+            <button class="btn secondary small" id="btnDownloadCode"><i data-lucide="download"></i> Unduh Berkas</button>
+            <button class="btn primary small" id="btnDeploy"><i data-lucide="rocket"></i> Terbitkan index.html · 15 Kredit</button>
+          </div>
+          <div class="progress-status" id="codeStatus" style="color:var(--muted);font-size:.78rem;margin-top:8px">Pratinjau HTML tampil di bawah setelah tombol ditekan.</div>
+          <iframe class="hidden" id="codePreview" sandbox="allow-scripts" title="Pratinjau" style="width:100%;height:230px;border:1px solid var(--border);border-radius:12px;background:#fff;margin-top:10px"></iframe>
+        </div>
+      </div>
+
+      <!-- TOOLS -->
+      <div class="section">
+        <div class="section-head"><h2><i data-lucide="wrench"></i> Pusat Alat Kreator</h2><span class="hint" id="toolsHint">10 alat gratis</span></div>
+        <div id="toolsRoot"></div>
+      </div>
+
+      <!-- GAMES -->
+      <div class="section">
+        <div class="section-head"><h2><i data-lucide="library-big"></i> Game Gratis Langmain</h2><span class="hint">Tanpa potongan Kredit</span></div>
+        <div class="game-grid" id="gameGrid"></div>
+      </div>
+
+      <!-- WALLET -->
+      <div class="section" id="kredit">
+        <div class="section-head"><h2><i data-lucide="coins"></i> Kredit & Paket Premium</h2><span class="hint">15 Kredit = 1 pembuatan</span></div>
+        <div class="card balance-hero">
+          <div id="walletCoin"></div>
+          <div><div class="eyebrow">Saldo Kredit</div><div style="font-size:1.8rem;font-weight:800" id="walletStars">0</div><div style="font-size:.75rem;color:var(--muted)" id="walletStatus"></div><div class="pro-timer" id="proTimer"></div></div>
+        </div>
+        <div class="card">
+          <div class="eyebrow">Klaim Gratis</div>
+          <div class="btn-row" style="margin-top:0">
+            <button class="btn secondary" id="btnChannelClaim"><i data-lucide="radio-tower"></i> Ikuti Saluran Resmi · Klaim +5 Kredit</button>
+            <button class="btn secondary" id="btnVideo1k"><i data-lucide="video"></i> Video 1.000 Views · Klaim via WA</button>
+            <button class="btn secondary" id="btnVideo15k"><i data-lucide="video"></i> Video 1.500 Views · Klaim via WA</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="eyebrow">Masukkan Kode Pro / Kredit</div>
+          <div class="redeem-row">
+            <input class="text" id="codeInput" placeholder="Tempel kode dari admin · format: NUSA-RIFAL-XX-XXXX" autocomplete="off">
+            <button class="btn primary" id="btnRedeem"><i data-lucide="ticket-check"></i> Aktifkan</button>
+          </div>
+          <div class="redeem-privacy">
+            <strong>Kode tidak dipajang di halaman ini</strong>
+            Kode kredit dikirim pribadi admin lewat WhatsApp setelah pembayaran. Tempel kode pada kolom di atas, lalu tekan Aktifkan. Setiap kode hanya berlaku 1 kali per akun dan tidak bisa dipakai ulang.
+          </div>
+        </div>
+        <div class="pkg-grid" id="pkgGrid"></div>
+        <div class="card">
+          <div class="eyebrow">Cara Beli</div>
+          <ol class="steps" style="list-style:none;margin-top:8px;font-size:.84rem;color:var(--muted);line-height:1.9">
+            <li>1. Pilih paket → tekan Beli via WhatsApp → pesan otomatis ke admin 0821-7611-734.</li>
+            <li>2. Setelah bayar, admin mengirim kode format NUSA-RIFAL-...</li>
+            <li>3. Masukkan kode di kolom atas → Kredit dan status Premium langsung aktif.</li>
+          </ol>
+        </div>
+      </div>
+      <footer>© 2026 NusaWebGame v1.4 · Dibuat oleh RIFAL MODS<br>Admin WhatsApp: 0821-7611-734</footer>
+    </section>
+
+    <!-- RIWAYAT -->
+    <section class="page" id="page-riwayat">
+      <div class="section-head" style="margin-top:14px"><h2><i data-lucide="history"></i> Riwayat Proyek</h2><button class="btn ghost small" id="btnClearHistory"><i data-lucide="trash-2"></i> Bersihkan</button></div>
+      <div id="historyList"></div>
+    </section>
+
+    <!-- PROFIL -->
+    <section class="page" id="page-profil">
+      <div class="section" style="margin-top:14px">
+        <div class="card">
+          <div class="profile-head">
+            <div class="avatar" id="profAvatar">N</div>
+            <div style="flex:1">
+              <input class="p-name" id="profName" placeholder="Nama kamu" maxlength="24">
+              <div class="p-since" id="profSince"></div>
+              <div style="margin-top:8px" id="profBadge"></div>
+              <div class="pro-timer" id="proTimerProfile"></div>
+            </div>
+          </div>
+          <div class="stat-grid">
+            <div class="stat"><dt>Saldo Kredit</dt><dd id="profStars">0</dd></div>
+            <div class="stat"><dt>Proyek Dibuat</dt><dd id="profProjects">0</dd></div>
+            <div class="stat"><dt>Alat Premium Terkunci</dt><dd id="profTools">40</dd></div>
+            <div class="stat"><dt>Status</dt><dd id="profStatus">Free</dd></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn gold wide" id="btnUpgrade"><i data-lucide="crown"></i> Upgrade Premium — Buka Semua 51 Alat</button>
+            <button class="btn ghost small" id="btnReset"><i data-lucide="rotate-ccw"></i> Hapus Semua Data & Mulai Baru</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="eyebrow">Kontak Admin</div>
+          <div class="btn-row" style="margin-top:0"><button class="btn primary" id="btnContactWa"><i data-lucide="message-circle"></i> Chat Admin WhatsApp</button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav id="bottomnav">
+    <button class="nav-btn active" data-page="beranda"><i data-lucide="home"></i> Beranda</button>
+    <button class="nav-btn" data-page="riwayat"><i data-lucide="history"></i> Riwayat</button>
+    <button class="nav-btn" data-page="profil"><i data-lucide="user"></i> Profil</button>
+  </nav>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toastRoot"></div>
+
+<script>
+/* ===== 1. CORE STATE & HELPERS ===== */
+(function(){
+  var KEY='nusawb_v5';
+  var S;
+  function def(){return{stars:0,channelClaimed:false,channelFollowed:false,unlimited:false,premium:false,permanent:false,proUntil:0,limitedUsed:0,usedCodes:[],adminCodes:[],announcement:'',history:[],username:'',projectsMade:0,createdAt:Date.now()};}
+  function load(){
+    var raw=null; try{raw=localStorage.getItem(KEY);}catch(e){}
+    var d=def();
+    if(raw){try{S=JSON.parse(raw);}catch(e){S=null;} if(!S||typeof S!=='object'||Array.isArray(S))S={};
+      Object.keys(d).forEach(function(k){if(S[k]===undefined||S[k]===null)S[k]=d[k];});
+    } else {S=d;save();}
+    if(!Array.isArray(S.usedCodes))S.usedCodes=[];
+    if(!Array.isArray(S.adminCodes))S.adminCodes=[];
+    if(!Array.isArray(S.history))S.history=[];
+  }
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+  function resetAll(){try{localStorage.removeItem(KEY);}catch(e){}location.reload();}
+  function toast(msg,type){
+    var r=document.getElementById('toastRoot'),t=document.createElement('div');
+    t.className='toast '+(type||'');t.textContent=msg;r.appendChild(t);
+    setTimeout(function(){t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(function(){t.remove();},320);},2600);
+  }
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function starCoin(size){size=size||18;
+    return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 40 40" aria-hidden="true"><rect x="2" y="2" width="36" height="36" rx="9" fill="#fff" stroke="#2563eb" stroke-width="2.5"/><rect x="9" y="9" width="22" height="22" rx="5" fill="#f4f8ff" stroke="#0ea5e9" stroke-width="1.5"/><polygon points="20,13 22.2,18.1 27.7,18.5 23.5,22.2 24.8,27.6 20,24.6 15.2,27.6 16.5,22.2 12.3,18.5 17.8,18.1" fill="#facc15" stroke="#eab308" stroke-width="1" stroke-linejoin="round"/></svg>';
+  }
+  function wa(t){return 'https://wa.me/628217611734?text='+encodeURIComponent(t);}
+  function fmtDate(ts){try{return new Date(ts).toLocaleString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return ''+ts;}}
+  function icons(){if(window.lucide&&typeof lucide.createIcons==='function'){try{lucide.createIcons();}catch(e){}}}
+  function uid(){return 'P'+Date.now().toString(36).toUpperCase()+Math.floor(Math.random()*90+10);}
+  function download(name,content,type){
+    var blob=new Blob([content],{type:type||'text/html;charset=utf-8'});
+    var url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(url);},800);
+  }
+  function openModal(title,icon,html){
+    var root=document.getElementById('modalRoot');
+    root.innerHTML='<div class="modal"><div class="modal-box"><div class="modal-head"><h3><i data-lucide="'+icon+'"></i>'+title+'</h3><button class="modal-close" id="mClose"><i data-lucide="x"></i></button></div><div class="mbody">'+html+'</div></div></div>';
+    document.getElementById('mClose').onclick=closeModal;
+    root.querySelector('.modal').addEventListener('click',function(e){if(e.target.classList.contains('modal'))closeModal();});
+    icons();
+    return root.querySelector('.mbody');
+  }
+  function closeModal(){document.getElementById('modalRoot').innerHTML='';}
+  function beep(freq){try{var C=window.AudioContext||window.webkitAudioContext;var c=new C();var o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=freq||660;g.gain.value=.14;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.18);}catch(e){}}
+  function speak(text){try{var u=new SpeechSynthesisUtterance(text);u.lang='id-ID';u.rate=.95;speechSynthesis.speak(u);}catch(e){}}
+
+  window.NW={KEY:KEY,S:S,save:save,resetAll:resetAll,toast:toast,esc:esc,starCoin:starCoin,wa:wa,fmtDate:fmtDate,icons:icons,uid:uid,download:download,openModal:openModal,closeModal:closeModal,beep:beep,speak:speak,
+    CODE_BOOK:[
+      {c:'TlVTQS1SSUZBTC0wMDEtS1hRWg==',s:50},
+      {c:'TlVTQS1SSUZBTC0wMDItQlZMVA==',s:50},
+      {c:'TlVTQS1SSUZBTC0wMDMtTVBKVw==',s:50},
+      {c:'TlVTQS1SSUZBTC0xMi1IS1dN',s:100},
+      {c:'TlVTQS1SSUZBTC0zNS1QTEJD',s:100},
+      {c:'TlVTQS1SSUZBTC03OS1WWEpO',s:100},
+      {c:'TlVTQS1SSUZBTC0xOC1CTlhZ',s:250,p:1,d:7},
+      {c:'TlVTQS1SSUZBTC00My1LTVpU',s:250,p:1,d:7},
+      {c:'TlVTQS1SSUZBTC02Ny1KSFdQ',s:250,p:1,d:7},
+      {c:'TlVTQS1SSUZBTC0wMDEtWjlYSw==',s:500,p:1,m:1},
+      {c:'TlVTQS1SSUZBTC0wMDItTTRQVg==',s:500,p:1,m:1},
+      {c:'TlVTQS1SSUZBTC0wMDMtQjdSUQ==',s:500,p:1,m:1}
+    ]};
+  load();NW.S=S;
+})();
+</script>
+
+<script>
+/* ===== 2. NAV, HEADER, PROFILE, HISTORY ===== */
+(function(){
+  var NW=window.NW;
+  function isPremium(){var S=NW.S;if(S.permanent||(S.unlimited&&S.premium))return true;if(S.premium&&S.proUntil&&Date.now()<S.proUntil)return true;return false;}
+  NW.isPremium=isPremium;
+
+  function renderHeader(){
+    var bal=(NW.S.unlimited&&NW.S.premium)?'∞':NW.S.stars;
+    document.getElementById('headerCoin').innerHTML=NW.starCoin(18)+'<span>'+bal+'</span>';
+    var b=document.getElementById('headerBadge');
+    b.innerHTML=isPremium()
+      ? '<span class="badge-pro gold"><i data-lucide="crown" style="width:12px;height:12px"></i>PREMIUM</span>'
+      : '<span class="badge-pro free"><i data-lucide="user" style="width:12px;height:12px"></i>FREE</span>';
+    NW.icons();
+  }
+  function switchPage(name){
+    document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+    document.getElementById('page-'+name).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.toggle('active',b.dataset.page===name);});
+    if(name==='riwayat')renderHistory();
+    if(name==='profil')renderProfile();
+    if(name==='beranda')renderWallet();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.addEventListener('click',function(){switchPage(b.dataset.page);});});
+  NW.switchPage=switchPage;
+
+  function renderGreet(){document.getElementById('greetName').textContent=NW.S.username?('Halo, '+NW.S.username+'!'):'Berkreasi, Berinovasi, Wujudkan Karyamu!';}
+
+  function renderProfile(){
+    var S=NW.S;
+    document.getElementById('profAvatar').textContent=(S.username||'N').charAt(0).toUpperCase();
+    document.getElementById('profName').value=S.username||'';
+    document.getElementById('profSince').textContent='Bergabung sejak '+NW.fmtDate(S.createdAt);
+    document.getElementById('profStars').textContent=S.stars;
+    document.getElementById('profProjects').textContent=S.projectsMade;
+    document.getElementById('profTools').textContent=isPremium()?'0 (terbuka)':'40 terkunci';
+    document.getElementById('profStatus').textContent=(S.unlimited&&S.premium)?'Premium Unlimited':(S.permanent&&S.premium?'Premium Selamanya':(isPremium()?'Premium 7 Hari':'Free'));
+    document.getElementById('profBadge').innerHTML=(S.permanent&&S.premium)
+      ? '<span class="badge-pro gold"><i data-lucide="crown" style="width:12px;height:12px"></i> Premium Selamanya — semua 51 alat terbuka tanpa batas</span>'
+      : isPremium()
+      ? '<span class="badge-pro gold"><i data-lucide="crown" style="width:12px;height:12px"></i> Premium 7 Hari aktif — semua 51 alat terbuka</span>'
+      : '<span class="badge-pro free"><i data-lucide="user" style="width:12px;height:12px"></i> Free — upgrade untuk membuka 40 alat premium</span>';
+    NW.icons();
+  }
+  document.getElementById('profName').addEventListener('input',function(e){NW.S.username=e.target.value.trim();NW.save();renderGreet();});
+  document.getElementById('btnUpgrade').addEventListener('click',function(){switchPage('beranda');setTimeout(function(){document.getElementById('kredit').scrollIntoView({behavior:'smooth'});},250);});
+  document.getElementById('btnReset').addEventListener('click',function(){if(confirm('Hapus semua data dan mulai dari awal?'))NW.resetAll();});
+  document.getElementById('btnContactWa').addEventListener('click',function(){window.open(NW.wa('Halo admin NusaWebGame, saya butuh bantuan paket / premium.'),'_blank');});
+  document.getElementById('bannerCta').addEventListener('click',function(){document.getElementById('panelTanpa').scrollIntoView({behavior:'smooth',block:'start'});});
+
+  function renderHistory(){
+    var list=document.getElementById('historyList'),items=NW.S.history.slice().reverse();
+    if(!items.length){list.innerHTML='<div class="empty"><i data-lucide="folder-open"></i><div>Belum ada proyek. Buat game atau aplikasi pertamamu di Beranda.</div></div>';NW.icons();return;}
+    list.innerHTML='';
+    items.forEach(function(h){
+      var d=document.createElement('div');d.className='hist-item';
+      d.innerHTML='<div class="hist-top"><div><div class="hist-title">'+NW.esc(h.title)+'</div>'+
+        '<div class="hist-meta"><span class="tag '+(h.mode==='coding'?'code':'ai')+'">'+(h.mode==='coding'?'Dengan Coding':'Tanpa Coding')+'</span><span>'+NW.fmtDate(h.ts)+'</span><span>−'+h.cost+' Kredit</span></div></div>'+
+        '<button class="btn ghost small" data-del="'+h.id+'"><i data-lucide="x"></i></button></div>'+
+        '<div class="hist-meta" style="margin-top:6px"><span class="result-link">'+NW.esc(h.link)+'</span></div>';
+      list.appendChild(d);
+    });
+    list.querySelectorAll('[data-del]').forEach(function(b){b.addEventListener('click',function(){NW.S.history=NW.S.history.filter(function(x){return x.id!==b.dataset.del;});NW.save();renderHistory();NW.toast('Proyek dihapus.');});});
+    NW.icons();
+  }
+  document.getElementById('btnClearHistory').addEventListener('click',function(){
+    if(!NW.S.history.length){NW.toast('Riwayat sudah kosong.');return;}
+    if(confirm('Hapus seluruh riwayat proyek?')){NW.S.history=[];NW.save();renderHistory();NW.toast('Riwayat dibersihkan.');}
+  });
+  NW.renderHeader=renderHeader;NW.renderProfile=renderProfile;NW.renderHistory=renderHistory;NW.renderGreet=renderGreet;
+})();
+</script>
+
+<script>
+/* ===== 3. GENERATOR TANPA CODING (output index.html) ===== */
+(function(){
+  var NW=window.NW,state='idle',diff='simple',theme='#2563eb',last=null;
+  var DUR={simple:9000,medium:14000,complex:20000};
+  document.querySelectorAll('#diffChips .chip').forEach(function(c){c.addEventListener('click',function(){
+    document.querySelectorAll('#diffChips .chip').forEach(function(x){x.classList.remove('active');});c.classList.add('active');diff=c.dataset.diff;
+  });});
+  document.querySelectorAll('#themeSwatches .swatch').forEach(function(s){s.addEventListener('click',function(){
+    document.querySelectorAll('#themeSwatches .swatch').forEach(function(x){x.classList.remove('active');});s.classList.add('active');theme=s.dataset.theme;
+  });});
+  function starter(title,color){
+    var t=NW.esc(title||'Proyek NusaWebGame');
+    return '<!DOCTYPE html>\n<html lang="id">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>'+t+'</title>\n<style>\nbody{margin:0;min-height:100vh;display:grid;place-items:center;text-align:center;font-family:sans-serif;background:'+color+';color:#fff;padding:24px}\nh1{font-size:1.8rem;margin:0 0 10px}\np{opacity:.9}\n</style>\n</head>\n<body>\n<div><h1>'+t+'</h1><p>Dibuat dengan NusaWebGame v1.4 oleh RIFAL MODS</p></div>\n</body>\n</html>';
+  }
+  document.getElementById('btnGenerate').addEventListener('click',function(){
+    if(state!=='idle')return;
+    var desc=document.getElementById('descInput').value.trim();
+    if(!desc){NW.toast('Tuliskan dulu deskripsi game / aplikasi yang kamu mau.','err');return;}
+    if(!(NW.S.unlimited&&NW.S.premium)&&NW.S.stars<15){NW.toast('Kredit kurang. Butuh 15 Kredit untuk membuat.','err');return;}
+    state='running';
+    var btn=document.getElementById('btnGenerate');btn.disabled=true;
+    document.getElementById('genProgress').classList.remove('hidden');
+    document.getElementById('genResult').classList.add('hidden');
+    document.getElementById('genStatus').textContent='Menyiapkan berkas index.html...';
+    var bar=document.getElementById('genBar'),pct=document.getElementById('genPct');
+    var start=Date.now(),dur=DUR[diff];
+    var iv=setInterval(function(){
+      var p=Math.min(1,(Date.now()-start)/dur);
+      bar.style.width=(p*100).toFixed(0)+'%';pct.textContent=(p*100).toFixed(0)+'%';
+      var msgs=['Menyusun struktur halaman index.html...','Menulis elemen antarmuka...','Menambahkan fungsi tombol...','Merapikan tampilan tema warna...','Memeriksa berkas sebelum diunduh...'];
+      document.getElementById('genStatus').textContent=msgs[Math.min(msgs.length-1,Math.floor(p*msgs.length))];
+      if(p>=1){
+        clearInterval(iv);
+        if(!(NW.S.unlimited&&NW.S.premium))NW.S.stars-=15;NW.S.projectsMade+=1;
+        var id=NW.uid(),title=desc.split('\n')[0].slice(0,42)||'Proyek Baru';
+        var link='https://nusawebgame.vercel.app/proyek/'+id.toLowerCase();
+        last={id:id,title:title,doc:starter(title,theme),link:link};
+        NW.S.history.push({id:id,title:title,mode:'ai',cost:15,ts:Date.now(),link:link});
+        NW.save();state='done';btn.disabled=false;
+        document.getElementById('genStatus').textContent='Selesai! Berkas index.html siap diunduh.';
+        document.getElementById('genLink').textContent=link;
+        document.getElementById('genResult').classList.remove('hidden');
+        NW.renderHeader();renderWalletBalance();
+        NW.toast('Selesai! 15 Kredit terpotong, tersimpan di Riwayat.','ok');
+      }
+    },120);
+  });
+  function renderWalletBalance(){var el=document.getElementById('walletStars');if(el)el.textContent=(NW.S.unlimited&&NW.S.premium)?'∞':NW.S.stars;var st=document.getElementById('walletStatus');if(st)st.textContent=NW.S.unlimited&&NW.S.premium?'Kredit Unlimited · tidak habis-habis':(NW.S.permanent&&NW.S.premium?'Premium Selamanya · semua alat terbuka':(NW.S.premium&&NW.S.proUntil&&Date.now()<NW.S.proUntil?'Premium 7 Hari aktif · semua alat terbuka':'Free · 15 Kredit untuk 1 pembuatan'));}
+  NW.renderWalletBalance=renderWalletBalance;
+  document.getElementById('btnGenDownload').addEventListener('click',function(){if(!last)return;NW.download('index.html',last.doc);NW.toast('index.html diunduh.','ok');});
+  document.getElementById('btnGenShare').addEventListener('click',function(){if(!last)return;var t='Lihat proyek saya di NusaWebGame: '+last.link;
+    if(navigator.share){navigator.share({title:'Proyek NusaWebGame',text:t,url:last.link}).catch(function(){});}
+    else if(navigator.clipboard){navigator.clipboard.writeText(last.link).then(function(){NW.toast('Link disalin.','ok');});}});
+  document.getElementById('btnGenNew').addEventListener('click',function(){state='idle';document.getElementById('descInput').value='';document.getElementById('genProgress').classList.add('hidden');document.getElementById('genResult').classList.add('hidden');document.getElementById('genBar').style.width='0%';document.getElementById('genPct').textContent='0%';});
+})();
+</script>
+
+<script>
+/* ===== 4. EDITOR DENGAN CODING (6 bahasa) ===== */
+(function(){
+  var NW=window.NW;
+  var TPL={
+    html:'<!DOCTYPE html>\n<html lang="id">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>Proyek Saya</title>\n<link rel="stylesheet" href="style.css">\n</head>\n<body>\n<h1>Halo, Dunia!</h1>\n<button onclick="sapa()">Tekan Aku</button>\n<script src="app.js"><\/script>\n</body>\n</html>',
+    css:'body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:sans-serif;background:#2563eb;color:#fff}\nh1{font-size:2rem}\nbutton{padding:12px 22px;border:none;border-radius:10px;background:#fff;color:#2563eb;font-weight:700}',
+    js:'function sapa(){\n  alert("Halo dari NusaWebGame!");\n}\nconsole.log("App jalan.");',
+    py:'# Contoh Python — NusaWebGame\ndef sapa(nama):\n    return f"Halo {nama}, selamat berkreasi!"\n\nprint(sapa("Rifal"))',
+    json:'{\n  "nama": "NusaWebGame",\n  "versi": "1.4",\n  "fitur": ["generator", "editor", "game gratis"],\n  "kredit": 0\n}',
+    svg:'<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">\n  <rect x="8" y="8" width="104" height="104" rx="22" fill="#2563eb"/>\n  <polygon points="60,30 68,52 92,52 73,66 80,90 60,75 40,90 47,66 28,52 52,52" fill="#facc15"/>\n</svg>'
+  };
+  var EXT={html:'index.html',css:'style.css',js:'app.js',py:'contoh.py',json:'data.json',svg:'ikon.svg'};
+  var editor=document.getElementById('codeEditor');
+  function setLang(l){editor.value=TPL[l];document.getElementById('codeStatus').textContent='Template '+l.toUpperCase()+' siap diedit.';}
+  document.getElementById('langSelect').addEventListener('change',function(e){setLang(e.target.value);});
+  setLang('html');
+  document.getElementById('btnPreview').addEventListener('click',function(){document.getElementById('codePreview').classList.remove('hidden');document.getElementById('codePreview').srcdoc=editor.value;document.getElementById('codeStatus').textContent='Pratinjau diperbarui.','ok';});
+  document.getElementById('btnCopy').addEventListener('click',function(){if(navigator.clipboard){navigator.clipboard.writeText(editor.value).then(function(){NW.toast('Kode disalin.','ok');});}});
+  document.getElementById('btnCheck').addEventListener('click',function(){
+    var c=editor.value,bad=[];
+    if(!/<!DOCTYPE html>/i.test(c)&&document.getElementById('langSelect').value==='html')bad.push('DOCTYPE html belum ada');
+    var o=(c.match(/{/g)||[]).length,cl=(c.match(/}/g)||[]).length;if(o!==cl)bad.push('kurung kurawal tidak seimbang ('+o+' vs '+cl+')');
+    var po=(c.match(/\(/g)||[]).length,pc=(c.match(/\)/g)||[]).length;if(po!==pc)bad.push('kurung biasa tidak seimbang ('+po+' vs '+pc+')');
+    document.getElementById('codeStatus').textContent=bad.length?('Perlu dicek: '+bad.join('; ')):'Kode tampil seimbang dan siap dipakai.';
+    document.getElementById('codeStatus').className=bad.length?'':'code-status ok';
+  });
+  document.getElementById('btnDownloadCode').addEventListener('click',function(){var l=document.getElementById('langSelect').value;NW.download(EXT[l],editor.value,l==='html'?'text/html;charset=utf-8':'text/plain;charset=utf-8');NW.toast('Berkas '+EXT[l]+' diunduh.','ok');});
+  document.getElementById('btnDeploy').addEventListener('click',function(){
+    if(!editor.value.trim()){NW.toast('Editor masih kosong.','err');return;}
+    if(!(NW.S.unlimited&&NW.S.premium)&&NW.S.stars<15){NW.toast('Kredit kurang. Butuh 15 Kredit.','err');return;}
+    if(!(NW.S.unlimited&&NW.S.premium))NW.S.stars-=15;NW.S.projectsMade+=1;
+    var id=NW.uid(),link='https://nusawebgame.vercel.app/proyek/'+id.toLowerCase();
+    NW.S.history.push({id:id,title:'Proyek Kode '+id,mode:'coding',cost:15,ts:Date.now(),link:link});
+    NW.save();
+    NW.download('index.html',editor.value);
+    NW.renderHeader();NW.renderWalletBalance();
+    NW.toast('15 Kredit terpotong — index.html diterbitkan.','ok');
+  });
+  document.querySelectorAll('.mode-tab').forEach(function(t){t.addEventListener('click',function(){
+    document.querySelectorAll('.mode-tab').forEach(function(x){x.classList.remove('active');});t.classList.add('active');
+    var mode=t.dataset.mode;
+    document.getElementById('panelTanpa').classList.toggle('hidden',mode!=='tanpa');
+    document.getElementById('panelDengan').classList.toggle('hidden',mode!=='dengan');
+  });});
+})();
+</script>
+
+<script>
+/* ===== 5. WALLET, PAKET, REDEEM ===== */
+(function(){
+  var NW=window.NW;
+  var PACKAGES=[
+    {id:'hemat',name:'Paket Hemat 7 Hari',icon:'flame',stars:100,price:'Rp 20.000',note:'100 Kredit, berlaku 7 Hari. Membuka semua HD Standar.',quota:true,wa:'Halo admin, saya mau beli Paket Hemat 100 Kredit Rp20.000 (7 Hari). Nama akun: '},
+    {id:'pro7',name:'Paket Pro 7 Hari',icon:'crown',stars:275,price:'Rp 90.000',note:'275 Kredit + Premium 7 Hari. Membuka HD Standar + SUPER HD.',quota:false,wa:'Halo admin, saya mau beli Paket Pro 7 Hari 275 Kredit Rp90.000. Nama akun: '},
+    {id:'elite',name:'Paket Permanen Elite',icon:'gem',stars:'∞',price:'Rp 250.000',note:'Kredit Unlimited tidak habis-habis + Premium selamanya. Semua fitur terbuka termasuk SUPER PREMIUM HD.',quota:false,featured:true,wa:'Halo admin, saya mau beli Paket Permanen Elite Rp250.000 (Kredit Unlimited). Nama akun: '}
+  ];
+  function renderPackages(){
+    var g=document.getElementById('pkgGrid');g.innerHTML='';
+    PACKAGES.forEach(function(p){
+      var used=p.quota?NW.S.limitedUsed:0,maxed=p.quota&&used>=3;
+      var card=document.createElement('div');card.className='pkg'+(p.featured?' featured':'');
+      card.innerHTML=(p.featured?'<span class="flag">TERBAIK</span>':(p.quota?'<span class="flag">TERBATAS</span>':''))+
+        '<div class="pkg-name"><i data-lucide="'+p.icon+'" style="width:18px;height:18px;color:var(--accent)"></i>'+p.name+'</div>'+
+        '<div class="pkg-stars">'+p.stars+' Kredit</div><div class="pkg-price">'+p.price+'</div><div class="pkg-note">'+p.note+'</div>'+
+        (p.quota?'<div class="pkg-quota '+(maxed?'done':'')+'">Kuota kamu: '+used+' / 3 '+(maxed?'— habis, tidak bisa dibeli lagi':'— tersisa '+(3-used)+' kali')+'</div>':'')+
+        '<div class="btn-row"><button class="btn '+(maxed?'ghost':'primary')+' small" '+(maxed?'disabled':'')+' data-buy="'+p.id+'">'+(maxed?'Kuota Habis':'<i data-lucide="shopping-cart"></i> Beli via WhatsApp')+'</button></div>';
+      g.appendChild(card);
+    });
+    g.querySelectorAll('[data-buy]').forEach(function(b){b.addEventListener('click',function(){var p=PACKAGES.find(function(x){return x.id===b.dataset.buy;});window.open(NW.wa(p.wa+(NW.S.username||'(belum diisi)')),'_blank');});});
+    NW.icons();
+  }
+  function renderWallet(){
+    NW.renderHeader();
+    var w=document.getElementById('walletStars'),st=document.getElementById('walletStatus');
+    if(NW.S.unlimited&&NW.S.premium){if(w)w.textContent='∞';if(st)st.textContent='Kredit Unlimited · tidak habis-habis · semua alat terbuka';}
+    else{
+      if(w)w.textContent=NW.S.stars;
+      if(st)st.textContent=NW.S.permanent&&NW.S.premium?'Premium Selamanya · semua alat terbuka':(NW.S.premium&&NW.S.proUntil&&Date.now()<NW.S.proUntil?'Premium 7 Hari aktif · semua alat terbuka':'Free · 15 Kredit untuk 1 pembuatan');
+    }
+    renderPackages();
+  }
+  NW.renderWallet=renderWallet;
+  var CHANNEL_URL='https://whatsapp.com/channel/0029VbE74MiATRSpm0q4SZ1r';
+  document.getElementById('btnChannelClaim').addEventListener('click',function(){
+    if(NW.S.channelClaimed){NW.toast('Klaim saluran resmi sudah diambil (+5 Kredit).','err');return;}
+    if(!NW.S.channelFollowed){
+      NW.S.channelFollowed=true;NW.save();
+      NW.toast('Anda belum mengikuti saluran. Tekan lagi untuk mengikuti saluran dan klaim hadiah sebesar 5 Kredit.','err');
+      return;
+    }
+    window.open(CHANNEL_URL,'_blank');
+    NW.S.channelClaimed=true;NW.S.stars+=5;NW.save();renderWallet();
+    NW.toast('Berhasil! +5 Kredit dari saluran resmi.','ok');
+  });
+  document.getElementById('btnVideo1k').addEventListener('click',function(){window.open(NW.wa('Klaim hadiah video 1.000 Views. Nama akun: '+(NW.S.username||'-')),'_blank');});
+  document.getElementById('btnVideo15k').addEventListener('click',function(){window.open(NW.wa('Klaim hadiah video 1.500 Views. Nama akun: '+(NW.S.username||'-')),'_blank');});
+  document.getElementById('btnRedeem').addEventListener('click',function(){
+    var raw=document.getElementById('codeInput').value.trim().toUpperCase();
+    if(!raw){NW.toast('Masukkan kode dulu.','err');return;}
+    if(NW.S.usedCodes.indexOf(raw)!==-1){NW.toast('Kode ini sudah dipakai di akun ini.','err');return;}
+    var enc='';try{enc=btoa(raw);}catch(e){enc='';}
+    var f=NW.CODE_BOOK.find(function(x){return x.c===enc;});
+    if(!f){var a=NW.S.adminCodes.find(function(x){return x.code===raw;});if(a)f={s:a.s,p:a.p,m:a.m,d:a.d};}
+    if(!f){NW.toast('Kode tidak ditemukan atau sudah digunakan.','err');return;}
+    NW.S.usedCodes.push(raw);
+    if(!NW.S.unlimited)NW.S.stars+=f.s;
+    if(!f.p&&f.s>=100){NW.S.limitedUsed=(NW.S.limitedUsed||0)+1;}
+    if(f.p){NW.S.premium=true;if(f.m){NW.S.permanent=true;NW.S.unlimited=true;}else{var base=(NW.S.proUntil&&NW.S.proUntil>Date.now())?NW.S.proUntil:Date.now();NW.S.proUntil=base+(f.d||7)*24*3600*1000;}}
+    NW.save();document.getElementById('codeInput').value='';
+    renderWallet();NW.renderHeader();if(NW.renderProfile)NW.renderProfile();if(NW.renderCountdown)NW.renderCountdown();
+    NW.toast('Berhasil! Kredit bertambah'+(f.p?(f.m?' · Premium Selamanya (Kredit Unlimited) aktif':' · Premium 7 Hari aktif'):'')+'.','ok');
+  });
+})();
+</script>
+
+<script>
+/* ===== 6. PUSAT ALAT — 51 TOOLS ===== */
+(function(){
+  var NW=window.NW;
+  function lockWrap(t){return t.lock?'<span class="t-lock"><i data-lucide="lock"></i></span>':'';}
+  function upgradeModal(){
+    var m=NW.openModal('Buka Semua Alat Premium','crown',
+      '<p style="font-size:.85rem;color:var(--muted);line-height:1.55">Upgrade Premium untuk membuka <b>40 alat</b> tambahan: kamera & foto, peningkat gambar HD, alarm, pengubah suara, Al-Qur\'an & 100 doa, dan alat kreator lainnya.</p>'+
+      '<div class="btn-row"><button class="btn gold wide" id="upWa"><i data-lucide="message-circle"></i> Beli Paket Premium via WhatsApp</button></div>');
+    m.querySelector('#upWa').addEventListener('click',function(){window.open(NW.wa('Halo admin, saya mau upgrade Premium. Nama akun: '+(NW.S.username||'-')),'_blank');});
+  }
+  function run(id){var t=TOOLS.find(function(x){return x.id===id;});if(!t)return;if(t.lock&&!NW.isPremium()){upgradeModal();return;}t.run();}
+
+  /* helper modal bodies */
+  function out(txt){return '<div class="tool-out" id="tOut">'+txt+'</div>';}
+  function setOut(html){var e=document.getElementById('tOut');if(e)e.innerHTML=html;}
+
+  var TOOLS=[
+  /* A. ALAT HARIAN (gratis) */
+  {id:'t01',cat:'Alat Harian',name:'Senter HP',icon:'flashlight',lock:false,run:function(){
+    var body=NW.openModal('Senter HP','flashlight',out('Tekan nyalakan; izinkan akses kamera agar lampu kilat menyala.')+
+      '<div class="tool-row"><button class="btn primary" id="tOn">Nyalakan</button><button class="btn ghost" id="tOff">Matikan</button></div>');
+    var track=null;
+    body.querySelector('#tOn').addEventListener('click',function(){
+      if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){NW.toast('Browser tidak mendukung senter.','err');return;}
+      navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(function(s){
+        track=s.getVideoTracks()[0];
+        try{track.applyConstraints({advanced:[{torch:true}]});NW.beep(880);setOut('Lampu kilat menyala. Tekan Matikan untuk berhenti.');}
+        catch(e){NW.toast('Perangkat tidak punya lampu kilat API.','err');}
+      }).catch(function(){NW.toast('Izin kamera ditolak.','err');});
+    });
+    body.querySelector('#tOff').addEventListener('click',function(){if(track)track.stop();setOut('Senter dimatikan.');});
+  }},
+  {id:'t02',cat:'Alat Harian',name:'Stopwatch',icon:'timer',lock:false,run:function(){
+    var body=NW.openModal('Stopwatch','timer','<div style="font-size:2.2rem;font-weight:800;text-align:center" id="swT">00:00.0</div><div class="tool-row" style="justify-content:center"><button class="btn primary" id="swGo">Mulai</button><button class="btn secondary" id="swReset">Ulang</button></div>');
+    var t0=null,iv=null,el=body.querySelector('#swT');
+    function fmt(ms){var m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000),d=Math.floor(ms%1000/100);return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+'.'+d;}
+    body.querySelector('#swGo').addEventListener('click',function(){
+      if(iv){clearInterval(iv);iv=null;this.textContent='Lanjut';return;}
+      this.textContent='Jeda';if(!t0)t0=Date.now();
+      var base=t0;iv=setInterval(function(){el.textContent=fmt(Date.now()-base);},90);
+    });
+    body.querySelector('#swReset').addEventListener('click',function(){clearInterval(iv);iv=null;t0=null;el.textContent='00:00.0';body.querySelector('#swGo').textContent='Mulai';});
+  }},
+  {id:'t03',cat:'Alat Harian',name:'Timer Mundur',icon:'alarm-clock',lock:false,run:function(){
+    var body=NW.openModal('Timer Mundur','alarm-clock','<div class="tool-row"><input class="text" id="tSec" type="number" min="1" placeholder="Detik, mis. 30"><button class="btn primary" id="tStart">Mulai</button></div><div style="font-size:2rem;font-weight:800;text-align:center;margin-top:14px" id="tLeft">--</div>');
+    var iv=null;
+    body.querySelector('#tStart').addEventListener('click',function(){
+      clearInterval(iv);var total=Math.max(1,parseInt(body.querySelector('#tSec').value||'10',10));var start=Date.now();
+      iv=setInterval(function(){var r=total-Math.floor((Date.now()-start)/1000);body.querySelector('#tLeft').textContent=r>0?r+' detik':'Selesai';
+        if(r<=0){clearInterval(iv);NW.beep(1046);NW.beep(1046);}},250);
+    });
+  }},
+  {id:'t04',cat:'Alat Harian',name:'Kalkulator',icon:'calculator',lock:false,run:function(){
+    var body=NW.openModal('Kalkulator','calculator','<input class="text" id="calDisp" readonly style="text-align:right;font-size:1.2rem;font-weight:700" value="0"><div class="num-grid" id="calGrid"></div>');
+    var disp=body.querySelector('#calDisp'),expr='';
+    var keys=['7','8','9','/','4','5','6','*','1','2','3','-','0','.','=','+'];
+    var grid=body.querySelector('#calGrid');
+    keys.forEach(function(k){var b=document.createElement('button');b.textContent=k;if(['/','*','-','+','='].indexOf(k)>=0)b.className='op';
+      b.addEventListener('click',function(){if(k==='='){try{var v=Function('return '+expr.replace(/[^0-9+\-*/.)(]/g,''));disp.value=v();expr=String(v());}catch(e){disp.value='Error';expr='';}}
+        else{expr+=k;disp.value=expr;}});grid.appendChild(b);});
+  }},
+  {id:'t05',cat:'Alat Harian',name:'Konverter Suhu',icon:'thermometer',lock:false,run:function(){
+    var body=NW.openModal('Konverter Suhu','thermometer','<div class="tool-row"><input class="text" id="tempV" type="number" placeholder="Nilai"><select class="text" id="tempF"><option value="c">Celcius → F</option><option value="f">Fahrenheit → C</option></select><button class="btn primary" id="tempGo">Hitung</button></div>'+out('-'));
+    body.querySelector('#tempGo').addEventListener('click',function(){var v=parseFloat(body.querySelector('#tempV').value);var f=body.querySelector('#tempF').value;
+      setOut(isNaN(v)?'Masukkan angka dulu.':(f==='c'?(v*9/5+32).toFixed(1)+' °F':((v-32)*5/9).toFixed(1)+' °C'));});
+  }},
+  {id:'t06',cat:'Alat Harian',name:'Konverter Panjang',icon:'ruler',lock:false,run:function(){
+    var units=[['cm','Sentimeter'],['m','Meter'],['km','Kilometer'],['in','Inci'],['ft','Kaki'],['mi','Mil']];
+    var opts=units.map(function(u){return '<option value="'+u[0]+'">'+u[1]+'</option>';}).join('');
+    var body=NW.openModal('Konverter Panjang','ruler','<div class="tool-row"><input class="text" id="lenV" type="number" placeholder="Nilai"><select class="text" id="lenA">'+opts+'</select><span>ke</span><select class="text" id="lenB">'+opts+'</select><button class="btn primary" id="lenGo">Hitung</button></div>'+out('-'));
+    var m={cm:0.01,m:1,km:1000,in:0.0254,ft:0.3048,mi:1609.344};
+    body.querySelector('#lenGo').addEventListener('click',function(){var v=parseFloat(body.querySelector('#lenV').value);var a=body.querySelector('#lenA').value,b=body.querySelector('#lenB').value;
+      setOut(isNaN(v)?'Masukkan angka dulu.':(v*m[a]/m[b]).toLocaleString('id-ID',{maximumFractionDigits:4})+' '+b);});
+  }},
+  {id:'t07',cat:'Alat Harian',name:'Kata Sandi Acak',icon:'key-round',lock:false,run:function(){
+    var body=NW.openModal('Kata Sandi Acak','key-round','<div class="tool-row"><label style="font-size:.8rem;color:var(--muted)">Panjang</label><input class="text" id="pwN" type="number" value="12" min="6" max="40"><button class="btn primary" id="pwGo">Buat</button></div>'+out('Kata sandi muncul di sini.')+'<div class="tool-row"><button class="btn secondary small" id="pwCopy">Salin</button></div>');
+    var last='';
+    body.querySelector('#pwGo').addEventListener('click',function(){var n=parseInt(body.querySelector('#pwN').value||'12',10);var ch='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*';last='';for(var i=0;i<n;i++)last+=ch[Math.floor(Math.random()*ch.length)];setOut('<code class="inline">'+last+'</code>');});
+    body.querySelector('#pwCopy').addEventListener('click',function(){if(last&&navigator.clipboard)navigator.clipboard.writeText(last);NW.toast('Kata sandi disalin.','ok');});
+  }},
+  {id:'t08',cat:'Alat Harian',name:'Generator Kode NUSA',icon:'ticket',lock:false,run:function(){
+    var body=NW.openModal('Generator Kode NUSA','ticket',out('Kode dibuat dengan format NUSA-RIFAL-angka-huruf')+'<div class="tool-row"><button class="btn primary" id="kGo">Buat Kode</button><button class="btn secondary small" id="kCopy">Salin</button></div>');
+    var last='';
+    body.querySelector('#kGo').addEventListener('click',function(){var n=Math.floor(10+Math.random()*89);var L='ABCDEFGHJKLMNPQRSTUVWXYZ';var h='';for(var i=0;i<4;i++)h+=L[Math.floor(Math.random()*26)];last='NUSA-RIFAL-'+n+'-'+h;setOut('<code class="inline">'+last+'</code>');});
+    body.querySelector('#kCopy').addEventListener('click',function(){if(last&&navigator.clipboard)navigator.clipboard.writeText(last);NW.toast('Kode disalin.','ok');});
+  }},
+  {id:'t09',cat:'Alat Harian',name:'Kalkulator Zakat 2,5%',icon:'piggy-bank',lock:false,run:function(){
+    var body=NW.openModal('Kalkulator Zakat 2,5%','piggy-bank','<div class="tool-row"><input class="text" id="zV" type="number" placeholder="Total simpanan (Rp)"><button class="btn primary" id="zGo">Hitung Zakat</button></div>'+out('-'));
+    body.querySelector('#zGo').addEventListener('click',function(){var v=parseFloat(body.querySelector('#zV').value);setOut(isNaN(v)?'Masukkan nominal dulu.':'Zakat 2,5% = Rp '+Math.round(v*0.025).toLocaleString('id-ID'));});
+  }},
+  {id:'t10',cat:'Alat Harian',name:'Catatan Cepat',icon:'notebook-pen',lock:false,run:function(){
+    var notes=JSON.parse(localStorage.getItem('nusa_notes_v1')||'[]');
+    function save(){localStorage.setItem('nusa_notes_v1',JSON.stringify(notes));}
+    var body=NW.openModal('Catatan Cepat','notebook-pen','<textarea id="noteIn" rows="3" placeholder="Tulis catatan singkat..."></textarea><div class="tool-row"><button class="btn primary small" id="noteAdd">Simpan</button></div><div id="noteList" style="margin-top:12px;display:flex;flex-direction:column;gap:8px"></div>');
+    function render(){var L=body.querySelector('#noteList');L.innerHTML='';notes.forEach(function(n,i){var d=document.createElement('div');d.className='tool-out';d.style.marginTop='0';d.innerHTML=NW.esc(n)+' <button class="btn ghost small" style="float:right" data-i="'+i+'">Hapus</button>';L.appendChild(d);});
+      L.querySelectorAll('[data-i]').forEach(function(b){b.addEventListener('click',function(){notes.splice(+b.dataset.i,1);save();render();});});}
+    body.querySelector('#noteAdd').addEventListener('click',function(){var v=body.querySelector('#noteIn').value.trim();if(!v)return;notes.push(v);save();body.querySelector('#noteIn').value='';render();NW.toast('Catatan disimpan.','ok');});
+    render();
+  }},
+
+  /* B. TEKS & DATA (premium) */
+  {id:'t11',cat:'Teks & Data',name:'Hitung Kata & Karakter',icon:'whole-word',lock:true,run:function(){
+    var body=NW.openModal('Hitung Kata & Karakter','whole-word','<textarea id="wcIn" rows="4" placeholder="Tempel teks di sini..."></textarea>'+out('Kata: 0 · Karakter: 0 · Baris: 0'));
+    body.querySelector('#wcIn').addEventListener('input',function(){var v=this.value;setOut('Kata: '+(v.trim()?v.trim().split(/\s+/).length:0)+' · Karakter: '+v.length+' · Baris: '+(v?v.split('\n').length:0));});
+  }},
+  {id:'t12',cat:'Teks & Data',name:'Ubah Huruf Besar/Kecil',icon:'case-sensitive',lock:true,run:function(){
+    var body=NW.openModal('Ubah Huruf','case-sensitive','<textarea id="csIn" rows="3" placeholder="Teks..."></textarea><div class="tool-row"><button class="btn secondary small" data-m="upper">BESAR</button><button class="btn secondary small" data-m="lower">kecil</button><button class="btn secondary small" data-m="cap">Kapital</button></div>'+out('-'));
+    body.querySelectorAll('[data-m]').forEach(function(b){b.addEventListener('click',function(){var v=body.querySelector('#csIn').value;var o=b.dataset.m==='upper'?v.toUpperCase():b.dataset.m==='lower'?v.toLowerCase():v.replace(/\b\w/g,function(c){return c.toUpperCase();});setOut(NW.esc(o));});});
+  }},
+  {id:'t13',cat:'Teks & Data',name:'Balik Teks',icon:'arrow-left-right',lock:true,run:function(){
+    var body=NW.openModal('Balik Teks','arrow-left-right','<textarea id="rvIn" rows="3" placeholder="Teks..."></textarea><div class="tool-row"><button class="btn primary small" id="rvGo">Balik</button></div>'+out('-'));
+    body.querySelector('#rvGo').addEventListener('click',function(){setOut(NW.esc(body.querySelector('#rvIn').value.split('').reverse().join('')));});
+  }},
+  {id:'t14',cat:'Teks & Data',name:'Rapikan Spasi',icon:'remove-formatting',lock:true,run:function(){
+    var body=NW.openModal('Rapikan Spasi','remove-formatting','<textarea id="spIn" rows="3" placeholder="Teks dengan spasi berlebih..."></textarea><div class="tool-row"><button class="btn primary small" id="spGo">Rapikan</button></div>'+out('-'));
+    body.querySelector('#spGo').addEventListener('click',function(){setOut(NW.esc(body.querySelector('#spIn').value.split('\n').map(function(l){return l.trim().replace(/\s+/g,' ');}).join('\n')));});
+  }},
+  {id:'t15',cat:'Teks & Data',name:'Acak Daftar / Baris',icon:'shuffle',lock:true,run:function(){
+    var body=NW.openModal('Acak Baris','shuffle','<textarea id="sfIn" rows="4" placeholder="Satu item per baris..."></textarea><div class="tool-row"><button class="btn primary small" id="sfGo">Acak</button></div>'+out('-'));
+    body.querySelector('#sfGo').addEventListener('click',function(){var a=body.querySelector('#sfIn').value.split('\n').filter(Boolean);for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}setOut(NW.esc(a.join('\n')));});
+  }},
+  {id:'t16',cat:'Teks & Data',name:'Angka Acak Rentang',icon:'hash',lock:true,run:function(){
+    var body=NW.openModal('Angka Acak','hash','<div class="tool-row"><input class="text" id="rMin" type="number" placeholder="Min"><input class="text" id="rMax" type="number" placeholder="Maks"><button class="btn primary" id="rGo">Buat</button></div>'+out('-'));
+    body.querySelector('#rGo').addEventListener('click',function(){var a=+body.querySelector('#rMin').value||1,b=+body.querySelector('#rMax').value||100;setOut('Angka: <b>'+(Math.floor(Math.random()*(b-a+1))+a)+'</b>');});
+  }},
+  {id:'t17',cat:'Teks & Data',name:'Hitung Umur',icon:'calendar-days',lock:true,run:function(){
+    var body=NW.openModal('Hitung Umur','calendar-days','<div class="tool-row"><input class="text" id="bd" type="date"><button class="btn primary" id="bdGo">Hitung</button></div>'+out('-'));
+    body.querySelector('#bdGo').addEventListener('click',function(){var d=new Date(body.querySelector('#bd').value);if(!d.getTime()){setOut('Pilih tanggal lahir dulu.');return;}var n=new Date();var y=n.getFullYear()-d.getFullYear(),m=n.getMonth()-d.getMonth(),dd=n.getDate()-d.getDate();if(dd<0){m--;dd+=30;}if(m<0){y--;m+=12;}setOut('Umur kamu: <b>'+y+' tahun '+m+' bulan '+dd+' hari</b>');});
+  }},
+  {id:'t18',cat:'Teks & Data',name:'Format Rupiah',icon:'banknote',lock:true,run:function(){
+    var body=NW.openModal('Format Rupiah','banknote','<div class="tool-row"><input class="text" id="rpV" type="number" placeholder="Nominal angka"><button class="btn primary" id="rpGo">Format</button></div>'+out('-'));
+    body.querySelector('#rpGo').addEventListener('click',function(){var v=parseFloat(body.querySelector('#rpV').value);setOut(isNaN(v)?'Masukkan angka.':'Rp '+Math.round(v).toLocaleString('id-ID'));});
+  }},
+  {id:'t19',cat:'Teks & Data',name:'Generator Nama Game',icon:'wand-sparkles',lock:true,run:function(){
+    var A=['Neo','Pixel',' Turbo',' Mega',' Super',' Echo',' Meta',' Zona',' Kota',' Raja'];var B=['Petualang','Balapan','Panahan','Pertarungan','Kebun','Lautan','Langit','Ksatria','Robot','Sulap'];
+    var body=NW.openModal('Nama Game Acak','wand-sparkles','<div class="tool-row"><button class="btn primary" id="ngGo">Acak Nama</button></div>'+out('...'));
+    body.querySelector('#ngGo').addEventListener('click',function(){setOut('<b>'+(A[Math.floor(Math.random()*A.length)].trim()+' '+B[Math.floor(Math.random()*B.length)])+'</b>');});
+  }},
+  {id:'t20',cat:'Teks & Data',name:'Encode / Decode Base64',icon:'binary',lock:true,run:function(){
+    var body=NW.openModal('Base64','binary','<textarea id="b64In" rows="3" placeholder="Teks..."></textarea><div class="tool-row"><button class="btn secondary small" id="bEn">Encode</button><button class="btn secondary small" id="bDe">Decode</button></div>'+out('-'));
+    body.querySelector('#bEn').addEventListener('click',function(){setOut(NW.esc(btoa(unescape(encodeURIComponent(body.querySelector('#b64In').value)))));});
+    body.querySelector('#bDe').addEventListener('click',function(){try{setOut(NW.esc(decodeURIComponent(escape(atob(body.querySelector('#b64In').value.trim())))));}catch(e){setOut('Bukan Base64 valid.');}});
+  }},
+
+  /* C. WARNA & GAMBAR (premium) */
+  {id:'t21',cat:'Warna & Gambar',name:'Palet Warna Acak',icon:'palette',lock:true,run:function(){
+    var body=NW.openModal('Palet Acak','palette','<div class="tool-row"><button class="btn primary" id="plGo">Buat Palet</button></div><div id="plBox" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px"></div>');
+    body.querySelector('#plGo').addEventListener('click',function(){var box=body.querySelector('#plBox');box.innerHTML='';for(var i=0;i<5;i++){var h='#'+Math.floor(Math.random()*16777215).toString(16).padStart(6,'0');var d=document.createElement('div');d.style.cssText='height:54px;border-radius:10px;background:'+h+';display:grid;place-items:end center;padding-bottom:5px;font-size:.66rem;color:#fff;font-weight:700';d.textContent=h;box.appendChild(d);}});
+  }},
+  {id:'t22',cat:'Warna & Gambar',name:'Campur Warna RGB',icon:'sliders-horizontal',lock:true,run:function(){
+    var body=NW.openModal('Campur RGB','sliders-horizontal',
+      '<label style="font-size:.78rem">Merah <span id="rV">120</span></label><input type="range" id="r" min="0" max="255" value="37" style="width:100%">' +
+      '<label style="font-size:.78rem">Hijau <span id="gV">99</span></label><input type="range" id="g" min="0" max="255" value="99" style="width:100%">' +
+      '<label style="font-size:.78rem">Biru <span id="bV">235</span></label><input type="range" id="b" min="0" max="255" value="235" style="width:100%">' +
+      '<div id="prevBox" style="height:64px;border-radius:12px;margin-top:10px;border:1px solid var(--border)"></div><div class="tool-row"><code class="inline" id="hexOut">#2563eb</code><button class="btn secondary small" id="rgbCopy">Salin Hex</button></div>');
+    function upd(){var r=+body.querySelector('#r').value,g=+body.querySelector('#g').value,b=+body.querySelector('#b').value;var h='#'+[r,g,b].map(function(v){return v.toString(16).padStart(2,'0');}).join('');body.querySelector('#prevBox').style.background=h;body.querySelector('#hexOut').textContent=h;body.querySelector('#rV').textContent=r;body.querySelector('#gV').textContent=g;body.querySelector('#bV').textContent=b;}
+    body.querySelectorAll('input[type=range]').forEach(function(s){s.addEventListener('input',upd);});upd();
+    body.querySelector('#rgbCopy').addEventListener('click',function(){if(navigator.clipboard)navigator.clipboard.writeText(body.querySelector('#hexOut').textContent);NW.toast('Hex disalin.','ok');});
+  }},
+  {id:'t23',cat:'Warna & Gambar',name:'Kanvas Sketsa',icon:'brush',lock:true,run:function(){
+    var body=NW.openModal('Kanvas Sketsa','brush','<canvas id="sketchCanvas" width="440" height="240"></canvas><div class="tool-row"><button class="btn secondary small" id="skClear">Bersihkan</button><button class="btn primary small" id="skSave">Unduh PNG</button></div>');
+    var cv=body.querySelector('#sketchCanvas'),ctx=cv.getContext('2d'),d=false;
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);ctx.strokeStyle='#2563eb';ctx.lineWidth=3;ctx.lineCap='round';
+    function pos(e){var r=cv.getBoundingClientRect();var t=e.touches?e.touches[0]:e;return{x:(t.clientX-r.left)*cv.width/r.width,y:(t.clientY-r.top)*cv.height/r.height};}
+    function sd(e){d=true;var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);}
+    function sm(e){if(!d)return;var p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();}
+    function su(){d=false;}
+    cv.addEventListener('mousedown',sd);cv.addEventListener('mousemove',sm);window.addEventListener('mouseup',su);
+    cv.addEventListener('touchstart',function(e){sd(e);e.preventDefault();},{passive:false});cv.addEventListener('touchmove',function(e){sm(e);e.preventDefault();},{passive:false});cv.addEventListener('touchend',su);
+    body.querySelector('#skClear').addEventListener('click',function(){ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);});
+    body.querySelector('#skSave').addEventListener('click',function(){cv.toBlob(function(b){var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='sketsa.png';a.click();setTimeout(function(){URL.revokeObjectURL(u);},800);});});
+  }},
+  {id:'t24',cat:'Warna & Gambar',name:'Info Ukuran Gambar',icon:'image',lock:true,run:function(){
+    var body=NW.openModal('Ukuran Gambar','image','<input type="file" id="imgF" accept="image/*"><div class="tool-out" id="imgOut">Pilih gambar dari HP untuk melihat resolusinya.</div>');
+    body.querySelector('#imgF').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var img=new Image();img.onload=function(){setOut('Ukuran: <b>'+img.width+' × '+img.height+' px</b> · File: '+(f.size/1024).toFixed(1)+' KB · '+f.name);URL.revokeObjectURL(img.src);};img.src=URL.createObjectURL(f);});
+  }},
+  {id:'t25',cat:'Warna & Gambar',name:'Avatar Inisial',icon:'user-round',lock:true,run:function(){
+    var body=NW.openModal('Avatar Inisial','user-round','<div class="tool-row"><input class="text" id="avN" placeholder="Nama kamu"><button class="btn primary" id="avGo">Buat Avatar</button></div><div id="avBox" style="display:grid;place-items:center;margin-top:12px"></div>');
+    body.querySelector('#avGo').addEventListener('click',function(){var n=(body.querySelector('#avN').value||'N').trim().charAt(0).toUpperCase();var svg='<svg width="120" height="120" viewBox="0 0 120 120"><rect width="120" height="120" rx="60" fill="#2563eb"/><text x="60" y="76" font-size="52" font-family="sans-serif" font-weight="800" fill="#fff" text-anchor="middle">'+n+'</text></svg>';body.querySelector('#avBox').innerHTML=svg;});
+  }},
+  {id:'t26',cat:'Warna & Gambar',name:'Generator Gradien CSS',icon:'gradient',lock:true,run:function(){
+    var body=NW.openModal('Gradien CSS','gradient','<div class="tool-row"><input type="color" id="gA" value="#2563eb"><input type="color" id="gB" value="#0ea5e9"><button class="btn primary" id="gGo">Buat</button></div><div id="gPrev" style="height:70px;border-radius:12px;margin-top:12px"></div><code class="inline" id="gCode" style="display:block;margin-top:8px;white-space:pre-wrap"></code>');
+    function up(){var a=body.querySelector('#gA').value,b=body.querySelector('#gB').value;var c='linear-gradient(135deg, '+a+', '+b+')';body.querySelector('#gPrev').style.background=c;body.querySelector('#gCode').textContent='background: '+c+';';}
+    body.querySelector('#gGo').addEventListener('click',up);up();
+  }},
+  {id:'t27',cat:'Warna & Gambar',name:'Kompas Arah',icon:'compass',lock:true,run:function(){
+    var body=NW.openModal('Kompas','compass','<div style="text-align:center;font-size:2rem;font-weight:800" id="cpD">--°</div><div class="tool-out" id="cpN" style="text-align:center">Arah: ?</div>');
+    function h(hd){var dir=['Utara','Timur Laut','Timur','Tenggara','Selatan','Barat Daya','Barat','Barat Laut'];var d=Math.round(hd/45)%8;body.querySelector('#cpD').textContent=Math.round(hd)+'°';body.querySelector('#cpN').textContent='Arah: '+dir[d];}
+    if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){DeviceOrientationEvent.requestPermission().then(function(p){if(p==='granted')window.addEventListener('deviceorientation',function(e){if(e.alpha!=null)h(360-e.alpha);});}).catch(function(){});}
+    else if(window.addEventListener){window.addEventListener('deviceorientation',function(e){if(e.alpha!=null)h(360-e.alpha);});}
+  }},
+  {id:'t28',cat:'Warna & Gambar',name:'Pemilih Warna',icon:'pipette',lock:true,run:function(){
+    var body=NW.openModal('Pemilih Warna','pipette','<input type="color" id="pc" value="#2563eb" style="width:100%;height:60px;border:1px solid var(--border);border-radius:12px;background:#fff"><div class="tool-row"><code class="inline" id="pcH">#2563eb</code><button class="btn secondary small" id="pcCopy">Salin</button></div>');
+    body.querySelector('#pc').addEventListener('input',function(e){body.querySelector('#pcH').textContent=e.target.value;});
+    body.querySelector('#pcCopy').addEventListener('click',function(){if(navigator.clipboard)navigator.clipboard.writeText(body.querySelector('#pcH').textContent);});
+  }},
+
+  /* D. HIBURAN (premium) */
+  {id:'t29',cat:'Hiburan',name:'Lempar Dadu',icon:'dices',lock:true,run:function(){
+    var body=NW.openModal('Lempar Dadu','dices','<div class="dice-row"><div class="dice" id="d1">–</div><div class="dice" id="d2">–</div></div><div class="tool-row" style="justify-content:center"><button class="btn primary" id="dGo">Lempar</button></div>');
+    body.querySelector('#dGo').addEventListener('click',function(){var a=body.querySelector('#d1'),b=body.querySelector('#d2');a.classList.add('rolling');b.classList.add('rolling');var n=0;var iv=setInterval(function(){a.textContent=1+Math.floor(Math.random()*6);b.textContent=1+Math.floor(Math.random()*6);if(++n>=8){clearInterval(iv);a.classList.remove('rolling');b.classList.remove('rolling');}},70);});
+  }},
+  {id:'t30',cat:'Hiburan',name:'Lempar Koin',icon:'coins',lock:true,run:function(){
+    var body=NW.openModal('Lempar Koin','coins','<div style="text-align:center"><i data-lucide="coins" style="width:48px;height:48px;color:var(--gold)"></i></div><div class="tool-row" style="justify-content:center"><button class="btn primary" id="cnGo">Lempar</button></div><div class="tool-out" id="cnOut" style="text-align:center">Kepala atau Angka?</div>');
+    body.querySelector('#cnGo').addEventListener('click',function(){var k=Math.random()<0.5;body.querySelector('#cnOut').textContent=k?'Kepala!':'Angka!';NW.beep(760);});
+  }},
+  {id:'t31',cat:'Hiburan',name:'Tic Tac Toe',icon:'grid-3x3',lock:true,run:function(){
+    var board=Array(9).fill(''),turn='X',over=false,sc={X:0,O:0};
+    var body=NW.openModal('Tic Tac Toe','grid-3x3','<div style="text-align:center;font-size:.84rem;margin-bottom:8px">Giliran <b id="tt">X</b> · X <b id="sx">0</b> – O <b id="so">0</b></div><div class="ttt-board" id="tb"></div><div class="tool-row" style="justify-content:center"><button class="btn secondary small" id="tr">Ulang</button></div>');
+    var wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    function render(){var g=body.querySelector('#tb');g.innerHTML='';board.forEach(function(v,i){var b=document.createElement('button');b.className='ttt-cell';b.textContent=v;
+      if(v&&wins.some(function(w){return w.indexOf(i)>=0&&w.every(function(j){return board[j]===v;});}))b.classList.add('win');
+      b.addEventListener('click',function(){move(i);});g.appendChild(b);});body.querySelector('#tt').textContent=turn;}
+    function move(i){if(over||board[i])return;board[i]=turn;var line=wins.find(function(w){return w.every(function(j){return board[j]===turn;});});
+      if(line){over=true;sc[turn]++;body.querySelector(turn==='X'?'#sx':'#so').textContent=sc[turn];render();return;}
+      if(board.every(Boolean)){over=true;render();return;}turn=turn==='X'?'O':'X';render();}
+    body.querySelector('#tr').addEventListener('click',function(){board=Array(9).fill('');turn='X';over=false;render();});render();
+  }},
+  {id:'t32',cat:'Hiburan',name:'Memori Kartu',icon:'layers',lock:true,run:function(){
+    var L=['A','B','C','D','E','F'],deck,f=null,lock=false,matched=0,moves=0;
+    function build(){deck=L.concat(L).map(function(l){return l;});for(var i=deck.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=deck[i];deck[i]=deck[j];deck[j]=t;}}
+    build();
+    var body=NW.openModal('Memori Kartu','layers','<div style="text-align:center;font-size:.84rem;margin-bottom:8px">Pasangan <b id="mm">0/6</b> · Langkah <b id="mv">0</b></div><div class="mem-grid" id="mg"></div><div class="tool-row" style="justify-content:center"><button class="btn secondary small" id="mr">Acak Ulang</button></div>');
+    function render(){var g=body.querySelector('#mg');g.innerHTML='';deck.forEach(function(c,i){var b=document.createElement('button');b.className='mem-card';b.textContent=c;b.addEventListener('click',function(){flip(i,b);});g.appendChild(b);});}
+    function flip(i,b){if(lock||b.classList.contains('flipped')||b.classList.contains('matched'))return;b.classList.add('flipped');if(!f){f={i:i,b:b};return;}moves++;body.querySelector('#mv').textContent=moves;
+      if(deck[f.i]===deck[i]){f.b.classList.add('matched');b.classList.add('matched');matched++;body.querySelector('#mm').textContent=matched+'/6';f=null;}
+      else{lock=true;var fb=f.b;setTimeout(function(){fb.classList.remove('flipped');b.classList.remove('flipped');lock=false;},600);f=null;}}
+    body.querySelector('#mr').addEventListener('click',function(){build();f=null;lock=false;matched=0;moves=0;body.querySelector('#mm').textContent='0/6';body.querySelector('#mv').textContent='0';render();});render();
+  }},
+  {id:'t33',cat:'Hiburan',name:'Pelari Ular',icon:'snail',lock:true,run:function(){
+    var body=NW.openModal('Pelari Ular','snail','<div style="text-align:center;font-size:.84rem">Skor <b id="snSc">0</b></div><canvas id="snakeCanvas" width="260" height="260"></canvas><div class="dpad"><span></span><button data-d="up"><i data-lucide="chevron-up"></i></button><span></span><button data-d="left"><i data-lucide="chevron-left"></i></button><button data-d="down"><i data-lucide="chevron-down"></i></button><button data-d="right"><i data-lucide="chevron-right"></i></button></div><div class="tool-row" style="justify-content:center"><button class="btn primary small" id="snGo">Mulai</button></div>');
+    var cv=body.querySelector('#snakeCanvas'),ctx=cv.getContext('2d'),C=20,CO=13,RO=13,timer=null,dir={x:1,y:0},snake,food,score;
+    function reset(){snake=[{x:6,y:6},{x:5,y:6},{x:4,y:6}];dir={x:1,y:0};score=0;food={x:10,y:10};body.querySelector('#snSc').textContent='0';}
+    function draw(){ctx.fillStyle='#fff';ctx.fillRect(0,0,260,260);ctx.fillStyle='#facc15';ctx.beginPath();ctx.arc(food.x*C+10,food.y*C+10,7,0,Math.PI*2);ctx.fill();snake.forEach(function(s,i){ctx.fillStyle=i===0?'#2563eb':'#7ba8b8';ctx.fillRect(s.x*C+1,s.y*C+1,18,18);});}
+    function step(){var h={x:snake[0].x+dir.x,y:snake[0].y+dir.y};
+      if(h.x<0||h.y<0||h.x>=CO||h.y>=RO||snake.some(function(s){return s.x===h.x&&s.y===h.y;})){clearInterval(timer);timer=null;NW.toast('Selesai! Skor '+score,'err');return;}
+      snake.unshift(h);if(h.x===food.x&&h.y===food.y){score++;body.querySelector('#snSc').textContent=score;food={x:Math.floor(Math.random()*CO),y:Math.floor(Math.random()*RO)};}else snake.pop();draw();}
+    body.querySelector('#snGo').addEventListener('click',function(){reset();draw();clearInterval(timer);timer=setInterval(step,150);});
+    body.querySelectorAll('.dpad [data-d]').forEach(function(b){b.addEventListener('click',function(){var d=b.dataset.d;if(d==='up'&&dir.y!==1)dir={x:0,y:-1};if(d==='down'&&dir.y!==-1)dir={x:0,y:1};if(d==='left'&&dir.x!==1)dir={x:-1,y:0};if(d==='right'&&dir.x!==-1)dir={x:1,y:0};});});
+    reset();draw();NW.icons();
+  }},
+  {id:'t34',cat:'Hiburan',name:'Tebak Angka 1–100',icon:'target',lock:true,run:function(){
+    var answer=1+Math.floor(Math.random()*100);
+    var body=NW.openModal('Tebak Angka','target','<div class="tool-row"><input class="text" id="gt" type="number" placeholder="Tebakan 1–100"><button class="btn primary" id="gtGo">Tebak</button></div><div class="tool-out" id="gtO">Aku memikirkan angka 1 sampai 100.</div>');
+    body.querySelector('#gtGo').addEventListener('click',function(){var v=parseInt(body.querySelector('#gt').value,10);if(isNaN(v))return;
+      if(v===answer){body.querySelector('#gtO').innerHTML='Tepat! Angkanya <b>'+answer+'</b>. Tekan untuk main lagi.';NW.beep(980);answer=1+Math.floor(Math.random()*100);}
+      else if(v<answer)body.querySelector('#gtO').textContent='Terlalu rendah, coba lebih besar.';
+      else body.querySelector('#gtO').textContent='Terlalu tinggi, coba lebih kecil.';});
+  }},
+  {id:'t35',cat:'Hiburan',name:'Metronom',icon:'audio-lines',lock:true,run:function(){
+    var body=NW.openModal('Metronom','audio-lines','<div class="tool-row"><label style="font-size:.8rem">BPM</label><input class="text" id="mp" type="number" value="80" style="max-width:90px"><button class="btn primary" id="mpGo">Mulai</button><button class="btn ghost" id="mpStop">Stop</button></div>');
+    var iv=null;body.querySelector('#mpGo').addEventListener('click',function(){clearInterval(iv);var b=Math.max(30,parseInt(body.querySelector('#mp').value||'80',10));NW.beep(880);iv=setInterval(function(){NW.beep(880);},60000/b);});
+    body.querySelector('#mpStop').addEventListener('click',function(){clearInterval(iv);iv=null;});
+  }},
+  {id:'t36',cat:'Hiburan',name:'Batu Gunting Kertas',icon:'hand',lock:true,run:function(){
+    var opts=[['batu','Batu'],['gunting','Gunting'],['kertas','Kertas']];
+    var body=NW.openModal('Batu Gunting Kertas','hand','<div class="tool-row" style="justify-content:center">'+opts.map(function(o){return '<button class="btn secondary small" data-p="'+o[0]+'">'+o[1]+'</button>';}).join('')+'</div><div class="tool-out" id="rpO" style="text-align:center">Pilih salah satu.</div>');
+    body.querySelectorAll('[data-p]').forEach(function(b){b.addEventListener('click',function(){var p=b.dataset.p,c=opts[Math.floor(Math.random()*3)][0];var win=(p==='batu'&&c==='gunting')||(p==='gunting'&&c==='kertas')||(p==='kertas'&&c==='batu');
+      body.querySelector('#rpO').innerHTML='Kamu: <b>'+p+'</b> · Komputer: <b>'+c+'</b><br>'+(p===c?'Seri!':win?'Kamu menang!':'Komputer menang.');});});
+  }},
+  {id:'t37',cat:'Hiburan',name:'Kuis Singkat',icon:'brain',lock:true,run:function(){
+    var Q=[{q:'Apa singkatan HTML?',o:['Hyper Text Markup Language','Home Tool Machine Language','Happy Text Music Loop'],a:0},
+      {q:'Warna utama NusaWebGame?',o:['Merah','Biru','Hijau'],a:1},
+      {q:'15 Kredit dipakai untuk?',o:['Membuat 1 proyek','Beli HP','Nonton video'],a:0},
+      {q:'Bahasa untuk gaya tampilan?',o:['Python','CSS','JSON'],a:1},
+      {q:'Admin WhatsApp NusaWebGame?',o:['0812-1111','0821-7611-734','0855-9999'],a:1}];
+    var qi=0,score=0;
+    var body=NW.openModal('Kuis Singkat','brain','<div id="qBox"></div>');
+    function renderQ(){var box=body.querySelector('#qBox');var q=Q[qi];
+      box.innerHTML='<div style="font-size:.8rem;color:var(--muted)">Soal '+(qi+1)+' / '+Q.length+' · Skor '+score+'</div><p style="font-weight:700;margin:8px 0">'+q.q+'</p>'+q.o.map(function(o,i){return '<button class="quiz-opt" data-i="'+i+'">'+o+'</button>';}).join('');
+      box.querySelectorAll('.quiz-opt').forEach(function(b){b.addEventListener('click',function(){var i=+b.dataset.i;box.querySelectorAll('.quiz-opt').forEach(function(x,j){if(j===q.a)x.classList.add('correct');if(j===i&&i!==q.a)x.classList.add('wrong');});if(i===q.a)score++;
+        setTimeout(function(){qi++;if(qi<Q.length)renderQ();else box.innerHTML='<div style="text-align:center;padding:14px"><div style="font-size:2rem;font-weight:800">'+score+'/'+Q.length+'</div><p style="color:var(--muted);margin-top:8px">Kuis selesai!</p><button class="btn primary small" id="qAgain" style="margin-top:12px">Ulangi</button></div>';box.querySelector('#qAgain').addEventListener('click',function(){qi=0;score=0;renderQ();});},700);});});
+    }
+    renderQ();
+  }},
+
+  /* E. PENGEMBANG (premium) */
+  {id:'t38',cat:'Pengembang',name:'Cek Struktur HTML',icon:'file-code-2',lock:true,run:function(){
+    var body=NW.openModal('Cek HTML','file-code-2','<textarea id="hIn" rows="5" placeholder="Tempel kode HTML..."></textarea><div class="tool-row"><button class="btn primary small" id="hGo">Periksa</button></div>'+out('-'));
+    body.querySelector('#hGo').addEventListener('click',function(){var c=body.querySelector('#hIn').value,bad=[];
+      if(!/<!DOCTYPE html>/i.test(c))bad.push('DOCTYPE hilang');if(!/<html[\s>]/i.test(c))bad.push('tag html hilang');if(!/<\/html>/i.test(c))bad.push('penutup /html hilang');if(!/<body[\s>]/i.test(c))bad.push('tag body hilang');
+      setOut(bad.length?'Perlu diperbaiki: '+bad.join(', '):'Struktur HTML lengkap dan baik.');});
+  }},
+  {id:'t39',cat:'Pengembang',name:'Cek Kurung Berpasangan',icon:'brackets',lock:true,run:function(){
+    var body=NW.openModal('Cek Kurung','brackets','<textarea id="bkIn" rows="5" placeholder="Tempel kode..."></textarea><div class="tool-row"><button class="btn primary small" id="bkGo">Cek</button></div>'+out('-'));
+    body.querySelector('#bkGo').addEventListener('click',function(){var c=body.querySelector('#bkIn').value;var p=[];var map={')':'(',']':'[','}':'{'};var ok=true;
+      for(var i=0;i<c.length;i++){var ch=c[i];if('([{'.indexOf(ch)>=0)p.push(ch);else if(')]}'.indexOf(ch)>=0){if(p.pop()!==map[ch]){ok=false;break;}}}
+      if(p.length)ok=false;setOut(ok?'Semua kurung berpasangan.':'Kurung tidak seimbang — periksa kembali.');});
+  }},
+  {id:'t40',cat:'Pengembang',name:'Pembuat Tautan WhatsApp',icon:'message-circle',lock:true,run:function(){
+    var body=NW.openModal('Tautan WhatsApp','message-circle','<textarea id="waIn" rows="3" placeholder="T pesan yang mau dibawa..."></textarea><div class="tool-row"><button class="btn primary small" id="waGo">Buat Link</button><button class="btn secondary small" id="waCopy">Salin</button></div>'+out('-'));
+    var link='';
+    body.querySelector('#waGo').addEventListener('click',function(){link='https://wa.me/628217611734?text='+encodeURIComponent(body.querySelector('#waIn').value||'Halo admin!');setOut('<code class="inline">'+link+'</code>');});
+    body.querySelector('#waCopy').addEventListener('click',function(){if(link&&navigator.clipboard)navigator.clipboard.writeText(link);});
+  }},
+  {id:'t41',cat:'Pengembang',name:'Rapikan & Validasi JSON',icon:'braces',lock:true,run:function(){
+    var body=NW.openModal('JSON','braces','<textarea id="jIn" rows="5" placeholder="{ ... }"></textarea><div class="tool-row"><button class="btn primary small" id="jGo">Validasi & Rapikan</button></div><pre class="tool-out" id="jOut" style="white-space:pre-wrap">Hasil JSON di sini.</pre>');
+    body.querySelector('#jGo').addEventListener('click',function(){try{var o=JSON.parse(body.querySelector('#jIn').value);body.querySelector('#jOut').textContent=JSON.stringify(o,null,2);NW.toast('JSON valid.','ok');}catch(e){body.querySelector('#jOut').textContent='JSON tidak valid: '+e.message;}});
+  }},
+  {id:'t42',cat:'Pengembang',name:'Template index.html',icon:'file-code',lock:true,run:function(){
+    NW.download('index.html',TPL_HTML,'text/html;charset=utf-8');NW.toast('Template index.html diunduh.','ok');
+  }},
+  {id:'t43',cat:'Pengembang',name:'Template style.css',icon:'paintbrush',lock:true,run:function(){
+    NW.download('style.css',TPL_CSS,'text/css;charset=utf-8');NW.toast('Template style.css diunduh.','ok');
+  }},
+  {id:'t44',cat:'Pengembang',name:'Template app.js',icon:'file-terminal',lock:true,run:function(){
+    NW.download('app.js',TPL_JS,'text/javascript;charset=utf-8');NW.toast('Template app.js diunduh.','ok');
+  }},
+  {id:'t45',cat:'Pengembang',name:'Template contoh.py',icon:'terminal',lock:true,run:function(){
+    NW.download('contoh.py',TPL_PY,'text/plain;charset=utf-8');NW.toast('Template contoh.py diunduh.','ok');
+  }},
+  {id:'t46',cat:'Hiburan',name:'Pengubah Suara (Mikrofon)',icon:'mic',lock:true,run:function(){
+    var FILTERS={
+      normal:{label:'Normal (tanpa efek)',rate:1,vol:1,type:'none',freq:0},
+      robot:{label:'1. Robot (suara mesin)',rate:.85,vol:1,type:'lowpass',freq:800},
+      alien:{label:'2. Alien (nada tinggi luar angkasa)',rate:1.6,vol:1,type:'highpass',freq:1200},
+      bayi:{label:'3. Bayi (nada sangat tinggi)',rate:1.8,vol:1,type:'highpass',freq:900},
+      perempuanMuda:{label:'4. Perempuan Muda (lembut sedang)',rate:1.12,vol:1,type:'highpass',freq:400},
+      perempuanTua:{label:'5. Perempuan Tua (tenang rendah)',rate:.82,vol:1,type:'lowpass',freq:600},
+      lakiMuda:{label:'6. Laki-laki Muda (jelas tegas)',rate:1,vol:1,type:'lowpass',freq:1400},
+      lakiTua:{label:'7. Laki-laki Tua (berat bijaksana)',rate:.72,vol:1,type:'lowpass',freq:500},
+      hantu:{label:'8. Hantu Gema (gema dalam)',rate:.92,vol:1,type:'lowpass',freq:700,echo:1},
+      bass:{label:'9. Bass Dalam (sangat rendah)',rate:.6,vol:1,type:'lowpass',freq:300},
+      bisikan:{label:'10. Bisikan (suara pelan lembut)',rate:1,vol:.35,type:'highpass',freq:2200}
+    };
+    var opts=Object.keys(FILTERS).map(function(k){return '<option value="'+k+'">'+FILTERS[k].label+'</option>';}).join('');
+    var body=NW.openModal('Pengubah Suara','mic',
+      '<div class="tool-row"><button class="btn primary small" id="vcRec"><i data-lucide="mic"></i> Rekam Mulai</button><button class="btn secondary small" id="vcStop" disabled>Berhenti</button></div>'+
+      '<label style="font-size:.78rem;display:block;margin:12px 0 4px;font-weight:700">Pilih Filter Suara (10 filter)</label>'+
+      '<select id="vcFilter" class="text" style="width:100%;padding:9px;border:1px solid var(--border);border-radius:10px;background:#fff">'+opts+'</select>'+
+      '<div class="tool-row" style="margin-top:10px"><button class="btn primary small" id="vcPlay">Putar Hasil Filter</button><button class="btn ghost small" id="vcClear">Bersihkan</button></div>'+
+      '<div class="tool-out" id="vcOut">Tekan Rekam Mulai, izinkan mikrofon, lalu bicara. Pilih filter, kemudian Putar Hasil Filter.</div>');
+    var rec=null,chunks=[],audioURL=null,stream=null,AC=null,srcNode=null,audioEl=null;
+    var recBtn=body.querySelector('#vcRec'),stopBtn=body.querySelector('#vcStop'),out=body.querySelector('#vcOut');
+    function ensureAC(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();}
+    recBtn.addEventListener('click',function(){
+      if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){NW.toast('Mikrofon tidak didukung browser ini.','err');return;}
+      navigator.mediaDevices.getUserMedia({audio:true}).then(function(s){
+        stream=s;chunks=[];
+        rec=new MediaRecorder(s);
+        rec.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data);};
+        rec.onstop=function(){audioURL=URL.createObjectURL(new Blob(chunks,{type:'audio/webm'}));out.textContent='Rekaman selesai. Pilih filter, lalu tekan Putar Hasil Filter.';};
+        rec.start();recBtn.disabled=true;stopBtn.disabled=false;
+        out.textContent='Sedang merekam... bicara sekarang, lalu tekan Berhenti.';
+      }).catch(function(){NW.toast('Izin mikrofon ditolak. Izinkan lewat pengaturan browser.','err');});
+    });
+    stopBtn.addEventListener('click',function(){
+      if(rec&&rec.state!=='inactive')rec.stop();
+      recBtn.disabled=false;stopBtn.disabled=true;
+      if(stream){stream.getTracks().forEach(function(t){t.stop();});}
+    });
+    body.querySelector('#vcPlay').addEventListener('click',function(){
+      if(!audioURL){NW.toast('Rekam dulu suaramu.','err');return;}
+      ensureAC();
+      if(!AC){NW.toast('Web Audio tidak didukung browser ini.','err');return;}
+      var F=FILTERS[body.querySelector('#vcFilter').value]||FILTERS.normal;
+      if(audioEl)audioEl.pause();
+      audioEl=new Audio(audioURL);audioEl.playbackRate=F.rate;
+      try{if(srcNode)srcNode.disconnect();}catch(e){}
+      srcNode=AC.createMediaElementSource(audioEl);
+      var gain=AC.createGain();gain.gain.value=F.vol;
+      var head=srcNode;
+      if(F.type&&F.type!=='none'){var bi=AC.createBiquadFilter();bi.type=F.type;bi.frequency.value=F.freq;srcNode.connect(bi);head=bi;}
+      head.connect(gain);
+      if(F.echo){var d=AC.createDelay(1);d.delayTime.value=.28;var fb=AC.createGain();fb.gain.value=.35;gain.connect(AC.destination);gain.connect(d);d.connect(fb);fb.connect(d);d.connect(AC.destination);}
+      else gain.connect(AC.destination);
+      audioEl.play().catch(function(){NW.toast('Putar gagal, coba rekam ulang.','err');});
+      out.textContent='Memutar filter: '+F.label+'. Nada dan suara berubah sesuai efek.';
+    });
+    body.querySelector('#vcClear').addEventListener('click',function(){
+      if(audioEl)audioEl.pause();
+      if(audioURL){URL.revokeObjectURL(audioURL);audioURL=null;}
+      out.textContent='Bersih. Tekan Rekam Mulai untuk mulai lagi.';
+    });
+    NW.icons();
+  }},
+  {id:'t47',cat:'Ibadah',name:'Al-Qur\'an & 100 Doa Harian',icon:'book-open',lock:true,run:function(){
+    var FAT=[
+      ['1','بِسْمِ اللَّهِ الرَّحْمٰنِ الرَّحِيْمِ','Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang.'],
+      ['2','الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِيْنَ','Segala puji bagi Allah, Tuhan seluruh alam.'],
+      ['3','الرَّحْمٰنِ الرَّحِيْمِ','Yang Maha Pengasih lagi Maha Penyayang.'],
+      ['4','مَالِكِ يَوْمِ الدِّيْنِ','Pemilik hari pembalasan.'],
+      ['5','اِيَّاكَ نَعْبُدُ وَاِيَّاكَ نَسْتَعِيْنُ','Hanya kepada Engkaulah kami menyembah dan hanya kepada Engkaulah kami memohon pertolongan.'],
+      ['6','اِهْدِنَا الصِّرَاطَ الْمُسْتَقِيْمَ','Tunjukilah kami jalan yang lurus.'],
+      ['7','صِرَاطَ الَّذِيْنَ اَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوْبِ عَلَيْهِمْ وَلَا الضَّآلِّيْنَ','Jalan orang-orang yang telah Engkau beri nikmat, bukan jalan mereka yang dibenci, dan bukan pula mereka yang sesat.']
+    ];
+    var IKHLAS=[
+      ['1','قُلْ هُوَ اللَّهُ أَحَدٌ','Katakanlah: Dialah Allah Yang Maha Esa.'],
+      ['2','اللَّهُ الصَّمَدُ','Allah tempat meminta segala kebutuhan.'],
+      ['3','لَمْ يَلِدْ وَلَمْ يُولَدْ','Ia tidak beranak dan tidak pula diperanakkan.'],
+      ['4','وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ','Dan tidak ada sesuatu pun yang setara dengan-Nya.']
+    ];
+    var DOA=[
+      ['Doa sebelum tidur','Bismika Allahumma amutu wa ahya.','Dengan nama-Mu ya Allah, aku mati dan aku bangun.'],
+      ['Doa bangun tidur','Alhamdulillahilladzi ahyaana ba\'da maa amaataan wa ilaihin nusyur.','Segala puji bagi Allah yang menghidupkan kami setelah kematian-Nya, dan kepada-Nya kami dibangkitkan.'],
+      ['Doa keluar rumah','Bismillahi tawakkaltu \'alallahi la hawla wa la quwwata illa billah.','Dengan nama Allah, aku bertawakal kepada Allah; tidak ada daya dan upaya kecuali dengan Allah.'],
+      ['Doa masuk rumah','Allahumma inna as aluka khoiril mauliji wa khoiril makhriji.','Ya Allah, aku mohon baiknya tempat masuk dan tempat keluar.'],
+      ['Doa masuk masjid','Allahummaf tah li abwaba rahmatik.','Ya Allah, bukakanlah pintu rahmat-Mu bagiku.'],
+      ['Doa keluar masjid','Allahumma inni as aluka min fadlik.','Ya Allah, aku memohon kepada-Mu sebagian dari karunia-Mu.'],
+      ['Doa sebelum makan','Bismillah.','Dengan nama Allah aku mulai.'],
+      ['Doa sesudah makan','Alhamdulillahilladzi at\'amani wa saqani ja\'alani muslimin.','Segala puji bagi Allah yang memberi aku makan dan minum serta menjadikan aku muslim.'],
+      ['Doa sebelum minum','Alhamdulillah.','Segala puji bagi Allah.'],
+      ['Doa sebelum wudhu','Nawaitul wudhu-a liraf\'il hadatsi ashghari lillahi ta\'ala.','Aku niat berwudhu untuk menghilangkan hadast kecil karena Allah Ta\'ala.'],
+      ['Doa sesudah wudhu','Ashhadu an la ilaha illallah wahdahu la syarikalah, wa ashhadu anna muhammadan abduhu wa rasuluh.','Aku bersaksi tiada ilah selain Allah Yang Maha Esa, tidak ada sekutu bagi-Nya; dan Muhammad adalah hamba serta utusan-Nya.'],
+      ['Doa sebelum sholat','Allahumma inni a\'udhu bika min al-khubutsi wal khaba-its.','Ya Allah, aku berlindung kepada-Mu dari gangguan setan laki-laki dan perempuan.'],
+      ['Doa sesudah sholat','Rabbana atina fid dunya hasanah wa fil akhirati hasanah wa qina adzabannar.','Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat, serta lindungilah kami dari azab neraka.'],
+      ['Doa memulai belajar','Rabbi zidni ilma warzuqni fahma.','Ya Tuhanku, tambahkanlah ilmu kepadaku dan anugerahkanlah kepahaman.'],
+      ['Doa menuntut ilmu','Allahumma infa\'ni bima \'allamtani wa \'allimni ma yanfa\'uni wa zidni ilma.','Ya Allah, manfaatkanlah apa yang Engkau ajarkan kepadaku, ajarkanlah aku apa yang bermanfaat, dan tambahkanlah ilmu kepadaku.'],
+      ['Doa memohon rezeki','Allahumma kunli halalin ganiyana \'an haramik wa bi fadlika \'amman siwak.','Ya Allah, cukupkanlah kami dengan yang halal dari yang haram, dan dengan karunia-Mu kami tidak bergantung pada selain-Mu.'],
+      ['Doa rezeki halal','Rabbighfir li dzunubi wa wahab li min ladunka rizqan halalan tayyiba.','Ya Tuhanku, ampunilah dosaku dan anugerahkan kepadaku rezeki yang halal lagi baik dari sisi-Mu.'],
+      ['Doa untuk orang tua','Rabbir hamhuma kama rabbayani saghira.','Ya Tuhanku, sayangilah keduanya seperti mereka mendidikku sejak kecil.'],
+      ['Doa bertaubat','Astaghfirullaha rabbi min kulli dzambin wa atubu ilaih.','Aku memohon ampun kepada Allah, Tuhanku, dari segala dosa dan bertaubat kepada-Nya.'],
+      ['Doa memohon ampunan','Rabbana faghfir lana dzunuba wa kaffir \'anna sayyinaatina wa tawaffana ma\'al abrar.','Ya Tuhan kami, ampunilah dosa kami, hapuslah kesalahan kami, dan wafatkanlah kami bersama orang-orang yang baik.'],
+      ['Doa keselamatan dunia akhirat','Allahumma inni as aluka al-\'afiya fid dunya wal akhirah.','Ya Allah, aku mohon keselamatan di dunia dan di akhirat.'],
+      ['Doa saat takut dan cemas','Hasbunallahu wa ni\'mal wakil.','Cukuplah Allah bagi kami, dan Dia sebaik-baik pelindung.'],
+      ['Doa saat kesulitan','La ilaha illa anta subhanaka inni kuntu min az-zalimin.','Tidak ada Tuhan selain Engkau, Maha Suci Engkau; sesungguhnya aku termasuk orang yang zalim.'],
+      ['Doa saat sakit','Allahumma rabban naas adzhibil ba\'sa, ishfi anta ash-syafi, la syifa-a illa syifa-uka syifa-an la yughadiru saqaman.','Ya Allah Tuhan manusia, hilangkanlah penyakit, sembuhkanlah, Engkaulah Yang Maha Penyembuh; tidak ada kesembuhan selain dari-Mu.'],
+      ['Doa saat turun hujan','Allahumma sayyiban nafi\'a.','Ya Allah, turunkanlah hujan yang bermanfaat.'],
+      ['Doa setelah hujan','Shona dhaubbikan min fadlillahi wa mahmatihi.','Kami diberi hujan karena karunia dan rahmat Allah.'],
+      ['Doa saat angin kencang','Allahumma inni as aluka khoiroha wa khoiro ma fiha wa a\'udzu bika min syarriha wa syarri ma fiha.','Ya Allah, aku mohon kebaikannya dan berlindung dari keburukannya.'],
+      ['Doa bertamu','Ifatah li abwaba rahmatik.','Bukakanlah pintu rahmat-Mu untukku.'],
+      ['Doa memakai pakaian baru','Alhamdulillahilladzi kasanihi wa razaqanihi min ghairi hawlin wal quwwah.','Segala puji bagi Allah yang memberi aku pakaian ini dan memberinya rezeki tanpa daya dan upaya dariku.'],
+      ['Doa melepas pakaian','Bismillahirrahmanirrahim.','Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang.'],
+      ['Doa mendengar guntur','Allahumma la taqtulna bi ghadabika wa la tuhlikna bi \'adzaabika wa \'afina qabla dhalik.','Ya Allah, janganlah Engkau bunuh kami dengan murka-Mu, jangan binasakan dengan azab-Mu, dan sejahterakan kami sebelum itu.'],
+      ['Doa di waktu sahur','Allahumma shimtu \'ala barikatika.','Ya Allah, aku berpuasa atas berkah-Mu.'],
+      ['Doa berbuka puasa','Allahumma laka sumtu wa \'ala rizqika aftartu.','Ya Allah, kepada-Mu aku berpuasa dan dengan rezeki-Mu aku berbuka.'],
+      ['Doa memohon ilmu yang bermanfaat','Allahumma inni as aluka \'ilman nafi\'a wa rizqan tayyiba wa \'amalan mutaqabbala.','Ya Allah, aku mohon ilmu yang bermanfaat, rezeki yang baik, dan amal yang diterima.'],
+      ['Doa menjaga lisan','Allahumma ahfaz lisani wa qalbi minal khothi.','Ya Allah, jaga lidah dan hatiku dari ucapan dan perbuatan yang salah.'],
+      ['Doa saat berdagang','Allahumma barik li fi bay\'i wa la tahrimni min barikatihi.','Ya Allah, berkahilah jual beliku dan janganlah Engkau halangi berkahnya.'],
+      ['Doa memohon pertolongan','Ya Allah, ya Rahman, tuntunlah aku pada jalan yang lurus dan mudahkanlah urusanku.'],
+      ['Doa dijauhkan dari neraka','Allahumma ajirni min an-nar.','Ya Allah, lindungilah aku dari api neraka.'],
+      ['Doa mohon syurga','Allahumma inni as aluka al-jannah wa a\'udzu bika min an-nar.','Ya Allah, aku mohon surga dan berlindung kepada-Mu dari neraka.'],
+      ['Doa penutup majelis','Subhanaka Allahumma wa bihamdika ashhadu an la ilaha illa anta astaghfiruka wa atubu ilaik.','Maha Suci Engkau ya Allah, dengan segala puji bagi-Mu; aku bersaksi tiada ilah selain Engkau, aku memohon ampun dan bertaubat kepada-Mu.']
+    ];
+    var DOA2=[
+      ['Doa rasa syukur','Alhamdulillahi ala kulli hal.','Segala puji bagi Allah atas segala keadaan.'],
+      ['Doa aman dari fitnah','Allahumma inni audzu bika min fitnatil ahli wal mal.','Ya Allah, aku berlindung kepada-Mu dari fitnah keluarga dan harta.'],
+      ['Doa hujan deras','Allahumma shayyiban naafi ya.','Ya Allah, turunkanlah hujan yang bermanfaat.'],
+      ['Doa keselamatan perjalanan','Allahumma hina shahral wa habal qorb.','Ya Allah, jadikanlah perjalanan ini selamat dan dekat sampai tujuan.'],
+      ['Doa naik kendaraan','Subhanal ladzii sakhkhoro lana hadza.','Maha Suci Allah yang menundukkan kendaraan ini kepada kami.'],
+      ['Doa turun kendaraan','Rabb anzilnii munazaro mubarokan.','Ya Tuhanku, turunkanlah aku di tempat yang diberkahi.'],
+      ['Doa memohon restu orang tua','Rabbir hamhuma kama rabbayani saghira.','Ya Tuhanku, sayangilah keduanya seperti mereka mendidikku kecil.'],
+      ['Doa menghadapi kesulitan','Hasbunallahu wa ni mal wakil.','Cukuplah Allah bagi kami, dan Dia sebaik-baik pelindung.'],
+      ['Doa memohon petunjuk','Allahumma arhidi was saddid.','Ya Allah, berilah aku petunjuk dan kemudahan.'],
+      ['Doa saat ragu','Allahumma arinii haqqo haqqaan.','Ya Allah, tampakkanlah yang hak sebagai hak dan berikan kepadaku.'],
+      ['Doa agar ilmu mudah diingat','Rabbidhah sadri wa yassir amri.','Ya Tuhanku, lapangkanlah dadaku dan mudahkanlah urusanku.'],
+      ['Doa anak shaleh','Rabbij alnii muqimash sholati wa min dzurriyyati.','Ya Tuhanku, jadikan aku dan keturunanku pendiri sholat.'],
+      ['Doa rezeki halal','Allahumma kunnii bi halalika an haramik.','Ya Allah, cukupkanlah aku dengan yang halal dari yang haram.'],
+      ['Doa dijauhkan dari riya','Allahumma la taj alna alayna al-khalaqa.','Ya Allah, jangan jadikan kami mencari pujian manusia.'],
+      ['Doa hati tenang','Allahumma thoi qlu bi dhikrik.','Ya Allah, tenangkanlah hatiku dengan mengingat-Mu.'],
+      ['Doa saat marah','Audzu billahi minasy syaitanir rajim.','Aku berlindung kepada Allah dari godaan syaitan yang terkutuk.'],
+      ['Doa memaafkan sesama','Allahummaghfir lana wa li khwa nina.','Ya Allah, ampunilah kami dan saudara kami sesama muslim.'],
+      ['Doa perlindungan keluarga','Allahumma hfadz li ahli.','Ya Allah, jagalah keluargaku.'],
+      ['Doa untuk saudara muslim','Akhiika dzakakhiro likha hii.','Semoga saudaraku selalu dalam kebaikan dan keimanan.'],
+      ['Doa menerima kabar buruk','Inna lillahi wa inna ilaihi rojiun.','Sesungguhnya kami milik Allah dan kepada-Nya kami kembali.'],
+      ['Doa mudah membaca Al-Quran','Rabbam siroh sadri.','Ya Tuhanku, lapangkanlah dadaku untuk membaca kitab-Mu.'],
+      ['Doa khatam Al-Quran','Allahumma ib alna bihi quluban.','Ya Allah, jadikanlah Al-Quran cahaya hatiku.'],
+      ['Doa Nuzulul Quran','Allahumma rohban bil quran.','Ya Allah, sayangilah kami dengan Al-Quran.'],
+      ['Doa malam Lailatul Qadar','Allahumma innaka afuwun tuhibbul afwa fa fu anna.','Ya Allah, Engkau Maha Pemaaf dan suka maaf, maka maafkanlah kami.'],
+      ['Doa memasuki Ramadhan','Allahumma barik lana fi Rajab.','Ya Allah, berkahilah bulan-bulan kami dan sampaikan kami ke Ramadhan.'],
+      ['Doa setelah Ramadhan','Taqabballahu minna wa minkum.','Semoga Allah menerima puasa kita dan kamu.'],
+      ['Doa Hari Raya Idul Fitri','Taqabbala minna sholiha aimal.','Terimalah dari kami amal-amal yang baik.'],
+      ['Doa Hari Raya Idul Adha','Allahumma hadzii min qobalik.','Ya Allah, ibadah kurban ini dari sisi-Mu diterima.'],
+      ['Doa memohon husnul khatimah','Allahumma tawa fana muslimaw wa alhiqni bissolihiin.','Ya Allah, wafatkanlah aku dalam keadaan muslim dan golongan orang saleh.'],
+      ['Doa agar hidup dalam iman','Allahumma ah yina bi khairi.','Ya Allah, hidupkanlah aku dalam kebaikan dan matikanlah dalam syahadat.'],
+      ['Doa di waktu sahur','Allahumma shimtu ala barikatika.','Ya Allah, aku berpuasa atas berkah-Mu.'],
+      ['Doa menjauhi rasa malas','Allahumma inni audzu bika minal ajzi wal kasal.','Ya Allah, aku berlindung dari lemah dan malas.'],
+      ['Doa agar tidak putus asa','Rabbah ib alni minal qowmin.','Ya Tuhanku, jangan Engkau jadikan aku golongan yang putus asa.'],
+      ['Doa saat sulit rezeki','Ya Rabbi hab li min ladunka riz qon thoyyiba.','Ya Tuhanku, berikan aku rezeki yang baik dari sisi-Mu.'],
+      ['Doa bersyukur atas nikmat','Alhamdulillah hamdan syakiran.','Segala puji bagi Allah sebagai bentuk syukur.'],
+      ['Doa menjaga mata','Allahumma ghodhor shar ro fi.','Ya Allah, jaga penglihatanku dari yang haram.'],
+      ['Doa menjaga telinga','Allahumma ja al sam ii hujron lidz dzikri.','Jadikan telingaku tempat mendengar kebenaran.'],
+      ['Doa makanan halal','Allahumma barik lana fima rozaq tana.','Ya Allah, berkahilah rezeki yang Engkau beri kepadaku.'],
+      ['Doa menjaga langkah','Allahumma hdini shiro thal mustaqim.','Ya Allah, tunjukkan langkahku ke jalan yang lurus.'],
+      ['Doa saat bercermin','Allahumma kama hassanto kholqi fahassin khuluqi.','Ya Allah, sebagaimana Engkau baguskan bentukku, baguskanlah akhlakku.'],
+      ['Doa memakai alas kaki','Alhamdulillahil ladzii hoda na.','Segala puji bagi Allah yang memberi petunjuk.'],
+      ['Doa masuk kamar mandi','Bismillahi Allahumma inni au dzubika minal khubutsi.','Dengan nama Allah, aku berlindung dari gangguan.'],
+      ['Doa keluar kamar mandi','Ghufronaka alhamdulillah.','Aku mohon ampunan-Mu, segala puji bagi-Mu.'],
+      ['Doa saat menguap','Allahumma inni audzu bika min hamazatish syayatin.','Aku menahan ngantuk dan berlindung pada Allah.'],
+      ['Doa saat bersin','Alhamdulillah.','Segala puji bagi Allah.'],
+      ['Doa menjawab orang bersin','Yarhamukallah.','Semoga Allah merahimmu.'],
+      ['Doa melihat orang kaya','Alhamdulillahil ladzi fadhdhalani.','Segala puji atas nikmat yang Engkau berikan kepadaku.'],
+      ['Doa melihat orang miskin','Alhamdulillahil ladzi khorro ma an ghola ba dh.','Aku bersyukur atas nikmat yang kau beri.'],
+      ['Doa mengingat kematian','Innal mau qibil qoblu al maut.','Ingatlah kematian sebelum datang kematian.'],
+      ['Doa memohon tempat akhirat baik','Allahumma qini adzabannar.','Ya Allah, lindungilah aku dari azab neraka.'],
+      ['Doa tidur ruqyah ringkas','Bismika Allahumma amutu wa ahya.','Dengan nama-Mu ya Allah, aku tidur dan bangun.'],
+      ['Doa mimpi buruk','Audzubillahi minasy syaitonir rajim.','Aku berlindung kepada Allah dari syaitan terkutuk.'],
+      ['Doa mimpi baik','Alhamdulillahil ladzi hadza.','Segala puji bagi Allah atas mimpi baik ini.'],
+      ['Doa melunasi hutang','Allahumma ikfin bi halalika an haramika.','Ya Allah, cukupkan aku dengan halal sehingga tidak butuh yang haram.'],
+      ['Doa kemudahan urusan','Rabbisy roh li sadri wa yassir li amri.','Ya Tuhanku, lapangkanlah dadaku dan mudahkanlah urusanku.'],
+      ['Doa menjaga lisan','Allahumma hfadz lisani minal kizibi.','Ya Allah, jaga lidahku dari ucapan yang salah.'],
+      ['Doa menjauhkan sifat tercela','Allahumma hami na min su ul akhlaqi.','Ya Allah, jauhkan kami dari akhlak yang buruk.'],
+      ['Doa awal pekan baru','Ya Rabbi ij alho shobhal ghoon.','Ya Tuhanku, jadikan hari ini penuh keberkahan dan kemudahan.'],
+      ['Doa memohon ilmu bermanfaat','Allahumma inni as aluka ilman naafi wa rizqon tayyiban.','Ya Allah, aku mohon ilmu bermanfaat dan rezeki baik.'],
+      ['Doa penutup berdoa','Rabbana taqabbal minna innaka antas samiul alim.','Ya Tuhan kami, terimalah doa kami; Engkaulah Yang Maha Mendengar lagi Maha Mengetahui.']
+    ];
+    function speak(id,text){
+      if(!('speechSynthesis' in window)){NW.toast('Suara tidak didukung browser ini.','err');return;}
+      var u=new SpeechSynthesisUtterance(text);u.lang='id-ID';u.rate=0.95;
+      speechSynthesis.cancel();speechSynthesis.speak(u);
+    }
+    function ayatRows(list,title){
+      var h='<div class="eyebrow" style="margin:8px 0">'+title+'</div>';
+      list.forEach(function(a,i){
+        h+='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px">'+
+          '<div style="font-size:1rem;line-height:2;text-align:right;color:var(--text);direction:rtl">'+a[1]+'</div>'+
+          '<div style="font-size:.78rem;color:var(--muted);margin-top:6px">'+a[0]+'. '+a[2]+'</div>'+
+          '<button class="btn ghost small" data-spk="'+title+'|'+i+'" style="margin-top:6px"><i data-lucide="volume-2"></i> Dengarkan Terjemahan</button></div>';
+      });
+      return h;
+    }
+    var ALL=DOA.concat(DOA2);
+    function doaRows(){
+      var h='<div class="eyebrow" style="margin:8px 0">'+ALL.length+' Doa Harian NusaWebGame</div>';
+      ALL.forEach(function(d,i){
+        var ar=d.length>=3?'<div style="font-size:.82rem;line-height:1.8;margin-top:4px;color:var(--text)">'+d[1]+'</div>':'',
+            idn=d.length>=3?d[2]:d[1];
+        h+='<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin-bottom:8px">'+
+          '<div style="font-weight:700;font-size:.84rem">'+(i+1)+'. '+d[0]+'</div>'+ar+
+          '<div style="font-size:.76rem;color:var(--muted);margin-top:3px">'+idn+'</div>'+
+          '<button class="btn ghost small" data-doa="'+i+'" style="margin-top:6px"><i data-lucide="volume-2"></i> Dengarkan Arti</button></div>';
+      });
+      return h;
+    }
+    var body=NW.openModal('Al-Qur\'an & Doa Harian','book-open',
+      '<div class="tool-row" style="margin-bottom:10px"><button class="btn primary small" id="tabQuran">Al-Qur\'an</button><button class="btn secondary small" id="tabDoa">100 Doa Harian</button></div>'+
+      '<div id="viewQuran"></div><div id="viewDoa" style="display:none"></div>');
+    body.querySelector('#viewQuran').innerHTML=ayatRows(FAT,'Surat Al-Fatihah (7 ayat)')+ayatRows(IKHLAS,'Surat Al-Ikhlas (4 ayat)');
+    body.querySelector('#viewDoa').innerHTML=doaRows();
+    body.querySelector('#tabQuran').addEventListener('click',function(){body.querySelector('#viewQuran').style.display='block';body.querySelector('#viewDoa').style.display='none';});
+    body.querySelector('#tabDoa').addEventListener('click',function(){body.querySelector('#viewQuran').style.display='none';body.querySelector('#viewDoa').style.display='block';});
+    body.querySelectorAll('[data-spk]').forEach(function(b){b.addEventListener('click',function(){
+      var parts=b.dataset.spk.split('|');var list=parts[0].indexOf('Fatihah')>=0?FAT:IKHLAS;speak(b,list[parseInt(parts[1],10)][2]);
+    });});
+    body.querySelectorAll('[data-doa]').forEach(function(b){b.addEventListener('click',function(){var d=ALL[parseInt(b.dataset.doa,10)];speak(b,d[2]||d[1]);});});
+    NW.icons();
+  }},
+  {id:'t48',cat:'Hiburan',name:'Kamera & Foto',icon:'camera',lock:true,run:function(){
+    var body=NW.openModal('Kamera & Foto','camera',
+      '<div style="text-align:center"><video id="camVideo" autoplay playsinline style="width:100%;max-height:220px;border-radius:12px;background:#000"></video>'+
+      '<div class="tool-row" style="justify-content:center;margin-top:10px"><button class="btn primary small" id="camOn"><i data-lucide="video"></i> Nyalakan Kamera</button><button class="btn primary small" id="camShot" disabled><i data-lucide="camera"></i> Jepret Foto</button><button class="btn ghost small" id="camOff">Matikan</button></div>'+
+      '<canvas id="camCanvas" style="display:none"></canvas><div id="camOut" class="tool-out">Kamera butuh izin akses. Tekan Nyalakan Kamera, lalu izinkan.</div></div>');
+    var stream=null,video=body.querySelector('#camVideo');
+    body.querySelector('#camOn').addEventListener('click',function(){
+      if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){NW.toast('Kamera tidak didukung browser ini.','err');return;}
+      navigator.mediaDevices.getUserMedia({video:true,audio:false}).then(function(s){
+        stream=s;video.srcObject=s;body.querySelector('#camShot').disabled=false;
+        body.querySelector('#camOut').textContent='Kamera aktif. Tekan Jepret Foto untuk mengambil gambar.';
+      }).catch(function(){NW.toast('Izin kamera ditolak. Izinkan di pengaturan browser.','err');});
+    });
+    body.querySelector('#camShot').addEventListener('click',function(){
+      var c=body.querySelector('#camCanvas');c.width=video.videoWidth||640;c.height=video.videoHeight||480;
+      c.getContext('2d').drawImage(video,0,0,c.width,c.height);
+      c.toBlob(function(blob){if(!blob)return;NW.download('foto_nusagame.png',blob,'image/png');NW.toast('Foto tersimpan.','ok');},'image/png');
+    });
+    body.querySelector('#camOff').addEventListener('click',function(){
+      if(stream){stream.getTracks().forEach(function(t){t.stop();});}
+      video.srcObject=null;body.querySelector('#camShot').disabled=true;body.querySelector('#camOut').textContent='Kamera dimatikan.';
+    });
+    NW.icons();
+  }},
+  {id:'t49',cat:'Warna & Gambar',name:'Peningkat Gambar HD (HUD)',icon:'image-up',lock:true,run:function(){
+    var TIERS=[
+      {code:'230Zz',name:'HD Standar',min:0,boost:1},
+      {code:'245Zz',name:'HD Standar',min:1,boost:1.05},
+      {code:'648Zz',name:'HD Standar',min:1,boost:1.1},
+      {code:'763Zz',name:'HD Standar',min:1,boost:1.15},
+      {code:'788Zz',name:'HD Standar',min:1,boost:1.18},
+      {code:'888Zz',name:'HD Standar',min:1,boost:1.22},
+      {code:'9087Zz',name:'SUPER HD',min:2,boost:1.3},
+      {code:'9971Zz',name:'SUPER HD',min:2,boost:1.38},
+      {code:'1088Zz',name:'SUPER HD',min:2,boost:1.45},
+      {code:'32415Zz',name:'SUPER HD',min:2,boost:1.55},
+      {code:'5427262Zz',name:'SUPER PREMIUM HD',min:3,boost:1.7},
+      {code:'52862622Zz',name:'SUPER PREMIUM HD',min:3,boost:1.9}
+    ];
+    function level(){var S=NW.S;if((S.permanent||S.unlimited)&&S.premium)return 3;if(S.premium&&S.proUntil&&Date.now()<S.proUntil)return 2;if(S.limitedUsed>0)return 1;return 0;}
+    var body=NW.openModal('Peningkat Gambar HD (HUD)','image-up',
+      '<input type="file" id="enFile" accept="image/*" style="width:100%;font-size:.78rem">'+
+      '<label style="font-size:.78rem;display:block;margin:10px 0 4px;font-weight:700">Tingkat Kejernihan HD</label>'+
+      '<select id="enTier" class="text" style="width:100%;padding:9px;border:1px solid var(--border);border-radius:10px;background:#fff"></select>'+
+      '<div class="tool-row" style="margin-top:10px"><button class="btn primary small" id="enApply">Pindai & Terapkan HD</button><button class="btn secondary small" id="enDown">Unduh Hasil HD</button></div>'+
+      '<div style="display:flex;gap:10px;margin-top:10px"><div style="flex:1;text-align:center"><div style="font-size:.72rem;color:var(--muted)">Foto Asli</div><img id="enOrig" style="width:100%;border-radius:10px;display:none"></div><div style="flex:1;text-align:center"><div style="font-size:.72rem;color:var(--muted)">Hasil HD</div><canvas id="enOut" style="width:100%;border-radius:10px;background:#fff"></canvas></div></div>'+
+      '<div class="tool-out" id="enMsg">Upload gambar, pilih tingkat kejernihan yang terbuka, lalu Pindai dan Terapkan HD.</div>');
+    var sel=body.querySelector('#enTier');
+    TIERS.forEach(function(t,i){var dis=t.min>level();var o=document.createElement('option');o.value=i;o.textContent=t.code+' — '+t.name+(dis?' (terkunci)':'');o.disabled=dis;sel.appendChild(o);});
+    var img=new Image();
+    body.querySelector('#enFile').addEventListener('change',function(e){
+      var f=e.target.files[0];if(!f)return;
+      var url=URL.createObjectURL(f);img.onload=function(){var im=body.querySelector('#enOrig');im.src=url;im.style.display='block';};img.src=url;
+    });
+    body.querySelector('#enApply').addEventListener('click',function(){
+      if(!img.naturalWidth){NW.toast('Upload gambar dulu.','err');return;}
+      var t=TIERS[parseInt(sel.value,10)];
+      if(t.min>level()){NW.toast('Tingkat ini terkunci paket Premium.','err');return;}
+      var c=body.querySelector('#enOut');c.width=img.naturalWidth;c.height=img.naturalHeight;
+      var ctx=c.getContext('2d');
+      ctx.filter='contrast('+(1+t.boost*0.08).toFixed(3)+') saturate('+(1+t.boost*0.06).toFixed(3)+') brightness(1.03)';
+      ctx.drawImage(img,0,0);
+      body.querySelector('#enMsg').textContent='Hasil HD tingkat '+t.code+' selesai. Tekan Unduh Hasil HD.';
+    });
+    body.querySelector('#enDown').addEventListener('click',function(){
+      var c=body.querySelector('#enOut');if(!c.width){NW.toast('Terapkan HD dulu.','err');return;}
+      c.toBlob(function(b){if(b){NW.download('hasil_hd.png',b,'image/png');NW.toast('Gambar HD diunduh.','ok');}},'image/png');
+    });
+    NW.icons();
+  }},
+  {id:'t50',cat:'Alat Harian',name:'Alarm Tidur/Sholat/Olahraga/Sekolah',icon:'alarm-clock',lock:true,run:function(){
+    function opts(n,label){var s='';for(var i=0;i<n;i++){s+='<option value="'+i+'">'+(i<10?'0':'')+i+' '+label+'</option>';}return s;}
+    function pad(n){return (n<10?'0':'')+n;}
+    var body=NW.openModal('Alarm 4 Jenis','alarm-clock',
+      '<div class="tool-row"><select id="alH" class="text" style="flex:1">'+opts(24,'Jam')+'</select><select id="alM" class="text" style="flex:1">'+opts(60,'Menit')+'</select><select id="alS" class="text" style="flex:1">'+opts(60,'Detik')+'</select></div>'+
+      '<div class="tool-row"><button class="btn secondary small" data-alarm="tidur"><i data-lucide="moon"></i> Tidur</button><button class="btn secondary small" data-alarm="sholat"><i data-lucide="mosque"></i> Sholat</button><button class="btn secondary small" data-alarm="olahraga"><i data-lucide="dumbbell"></i> Olahraga</button><button class="btn secondary small" data-alarm="sekolah"><i data-lucide="school"></i> Sekolah</button></div>'+
+      '<div id="alClock" style="font-size:2rem;font-weight:800;text-align:center;margin:12px 0;font-variant-numeric:tabular-nums">00:00:00</div>'+
+      '<div class="tool-out" id="alMsg">Atur Jam, Menit, Detik, lalu tekan jenis alarm untuk mulai berjalan.</div>');
+    var remain=0,timer=null;
+    body.querySelectorAll('[data-alarm]').forEach(function(b){b.addEventListener('click',function(){
+      var label=b.dataset.alarm;
+      var h=parseInt(body.querySelector('#alH').value,10),m=parseInt(body.querySelector('#alM').value,10),s=parseInt(body.querySelector('#alS').value,10);
+      remain=h*3600+m*60+s;
+      if(remain<=0){NW.toast('Atur waktu lebih dari 0 detik.','err');return;}
+      if(timer)clearInterval(timer);
+      body.querySelector('#alMsg').textContent='Alarm '+label+' berjalan. Hitungan mundur di bawah ini tetap berjalan selama halaman terbuka.';
+      timer=setInterval(function(){
+        remain--;
+        if(remain<=0){clearInterval(timer);timer=null;body.querySelector('#alClock').textContent='00:00:00';body.querySelector('#alMsg').textContent='Waktu alarm '+label+' tiba!';NW.beep(880);setTimeout(function(){NW.beep(1175);},250);if(navigator.vibrate)navigator.vibrate([200,100,200]);NW.toast('Alarm '+label+' berbunyi!','ok');return;}
+        body.querySelector('#alClock').textContent=pad(Math.floor(remain/3600))+':'+pad(Math.floor(remain%3600/60))+':'+pad(remain%60);
+      },1000);
+    });});
+    NW.icons();
+  }},
+  {id:'t51',cat:'Pengembang',name:'Panel Admin',icon:'shield-lock',lock:false,run:function(){
+    var body=NW.openModal('Panel Admin','shield-lock',
+      '<div id="admLogin"><label style="font-size:.78rem;font-weight:700">PIN Admin</label><input class="text" id="admPin" type="password" inputmode="numeric" placeholder="Masukkan PIN" style="margin-top:6px"><div class="tool-row" style="margin-top:10px"><button class="btn primary small" id="admGo">Masuk</button></div><div class="tool-out" id="admMsg">Khusus admin. PIN tidak ditampilkan di halaman ini.</div></div>'+
+      '<div id="admDash" style="display:none"></div>');
+    body.querySelector('#admGo').addEventListener('click',function(){
+      var pin=body.querySelector('#admPin').value.trim();
+      if(pin!=='123487'){body.querySelector('#admMsg').textContent='Anda tidak bisa memasuki area panel admin. Area admin dikarenakan Anda bukan anggota admin.';NW.toast('Akses ditolak.','err');return;}
+      showDash();
+    });
+    function showDash(){
+      body.querySelector('#admLogin').style.display='none';
+      var d=body.querySelector('#admDash');d.style.display='block';
+      var S=NW.S;
+      d.innerHTML='<div class="tool-out">Total kode dipakai: '+S.usedCodes.length+' · Kredit: '+(S.unlimited?'Unlimited':S.stars)+' · Status: '+(S.permanent?'Permanen':(S.premium?'Berjangka':'Free'))+'</div>'+
+      '<label style="font-size:.78rem;display:block;margin:10px 0 4px;font-weight:700">Buat Kode Kredit Baru</label>'+
+      '<select id="admTier" class="text" style="width:100%;padding:9px;border:1px solid var(--border);border-radius:10px;background:#fff"><option value="100,0,0,0">Hemat 100 Kredit 7 Hari</option><option value="275,1,0,7">Pro 275 Kredit 7 Hari</option><option value="0,1,1,0">Permanen Unlimited</option></select>'+
+      '<div class="tool-row" style="margin-top:8px"><button class="btn primary small" id="admMake">Buat Kode</button><button class="btn secondary small" id="admCopy">Salin Kode</button></div>'+
+      '<div class="tool-out" id="admNew">Kode baru muncul di sini dan otomatis dikenali saat ditukarkan di perangkat ini.</div>';
+      var last='';
+      d.querySelector('#admMake').addEventListener('click',function(){
+        var p=d.querySelector('#admTier').value.split(',');
+        var code='NUSA-RIFAL-'+(10+Math.floor(Math.random()*89))+'-'+Array.from({length:4},function(){return 'ABCDEFGHJKLMNPQRSTUVWXYZ'[Math.floor(Math.random()*26)];}).join('');
+        S.adminCodes.push({code:code,s:parseInt(p[0],10),p:parseInt(p[1],10),m:parseInt(p[2],10),d:parseInt(p[3],10)});
+        NW.save();last=code;
+        d.querySelector('#admNew').textContent='Kode baru: '+code+'. Kirim ke pembeli lewat WhatsApp; kode langsung dikenali saat ditukarkan.';
+      });
+      d.querySelector('#admCopy').addEventListener('click',function(){if(last&&navigator.clipboard)navigator.clipboard.writeText(last);NW.toast('Kode disalin.','ok');});
+    }
+    NW.icons();
+  }}
+  ];
+
+  var TPL_HTML='<!DOCTYPE html>\n<html lang="id">\n<head>\n<meta charset="UTF-8">\n<title>Judul Proyek</title>\n<link rel="stylesheet" href="style.css">\n</head>\n<body>\n<h1>Halo Dunia</h1>\n<script src="app.js"><\/script>\n</body>\n</html>';
+  var TPL_CSS='body{margin:0;font-family:sans-serif;display:grid;place-items:center;min-height:100vh;background:#2563eb;color:#fff}';
+  var TPL_JS='console.log("Halo dari app.js");';
+  var TPL_PY='# Contoh Python\nprint("Halo NusaWebGame!")';
+
+  var CATS=[['Alat Harian','wrench'],['Teks & Data','whole-word'],['Warna & Gambar','palette'],['Hiburan','gamepad-2'],['Ibadah','book-open'],['Pengembang','code-2']];
+  function renderTools(){
+    var root=document.getElementById('toolsRoot');root.innerHTML='';
+    CATS.forEach(function(c){
+      var avail=TOOLS.filter(function(t){return t.cat===c[0];});
+      var head=document.createElement('div');head.className='tools-cat';head.innerHTML='<i data-lucide="'+c[1]+'"></i>'+c[0];root.appendChild(head);
+      var grid=document.createElement('div');grid.className='tool-grid';
+      avail.forEach(function(t){
+        var locked=t.lock&&!NW.isPremium();
+        var b=document.createElement('button');b.className='tool-card'+(locked?' locked':'');
+        b.innerHTML='<div class="t-icon"><i data-lucide="'+t.icon+'"></i></div><div class="t-name">'+t.name+'</div>'+(locked?'<span class="t-lock"><i data-lucide="lock"></i></span>':'');
+        b.addEventListener('click',function(){run(t.id);});
+        grid.appendChild(b);
+      });
+      root.appendChild(grid);
+    });
+    var free=TOOLS.filter(function(t){return !t.lock;}).length;
+    document.getElementById('toolsHint').textContent=NW.isPremium()?'Semua '+TOOLS.length+' alat terbuka':free+' alat gratis · '+(TOOLS.length-free)+' terkunci Premium';
+    NW.icons();
+  }
+  NW.renderTools=renderTools;
+  console.assert(TOOLS.length===51,'Jumlah alat harus 51, sekarang '+TOOLS.length);
+
+  /* Galeri game gratis (4) */
+  var GAMES=[
+    {id:'t31',name:'Tic Tac Toe',meta:'2 Pemain',icon:'grid-3x3',desc:'Tiga simbol berurutan jadi pemenang.'},
+    {id:'t32',name:'Memori Kartu',meta:'1–4 Pemain',icon:'layers',desc:'Cocokkan semua pasangan kartu sedikit mungkin.'},
+    {id:'t33',name:'Pelari Ular',meta:'1 Pemain',icon:'snail',desc:'Makan makanan, tumbuh panjang, hindari tabrakan.'},
+    {id:'t34',name:'Tebak Angka',meta:'1 Pemain',icon:'target',desc:'Tebak angka rahasia 1 sampai 100.'}
+  ];
+  function renderGames(){
+    var g=document.getElementById('gameGrid');g.innerHTML='';
+    GAMES.forEach(function(ga){
+      var c=document.createElement('div');c.className='game-card';
+      c.innerHTML='<div class="g-icon"><i data-lucide="'+ga.icon+'"></i></div><div class="g-name">'+ga.name+'</div><div class="g-desc">'+ga.desc+'</div><div class="g-meta">'+ga.meta+'</div><div class="tool-row" style="margin-top:4px"><button class="btn primary small" data-g="'+ga.id+'"><i data-lucide="play"></i> Mainkan</button></div>';
+      g.appendChild(c);
+    });
+    g.querySelectorAll('[data-g]').forEach(function(b){b.addEventListener('click',function(){run(b.dataset.g);});});
+    NW.icons();
+  }
+  NW.renderGames=renderGames;
+})();
+</script>
+
+<script>
+/* ===== 6b. PREMIUM COUNTDOWN — hitung mundur hari/jam/menit/detik berbasis timestamp tersimpan ===== */
+(function(){
+  var NW=window.NW;
+  function pad(n){return (n<10?'0':'')+n;}
+  function parts(ms){
+    var s=Math.max(0,Math.floor(ms/1000));
+    var d=Math.floor(s/86400);s%=86400;
+    var h=Math.floor(s/3600);s%=3600;
+    var m=Math.floor(s/60);var sec=s%60;
+    return {d:d,h:h,m:m,s:sec};
+  }
+  function chip(v,label){return '<div class="chip"><b>'+pad(v)+'</b><span>'+label+'</span></div>';}
+  function render(){
+    var S=NW.S,html='';
+    if(S.permanent&&S.premium){
+      html='<div class="perm"><i data-lucide="crown" style="width:14px;height:14px"></i> Premium Selamanya · tanpa batas waktu</div>';
+    }else if(S.premium&&S.proUntil&&Date.now()<S.proUntil){
+      var p=parts(S.proUntil-Date.now());
+      html=chip(p.d,'Hari')+chip(p.h,'Jam')+chip(p.m,'Menit')+chip(p.s,'Detik')+
+        '<div class="pro-timer-note">Waktu premium berjalan terus walau aplikasi ditutup atau HP mati; hitungan tersimpan otomatis di perangkat ini.</div>';
+    }
+    ['proTimer','proTimerProfile'].forEach(function(id){var el=document.getElementById(id);if(el)el.innerHTML=html;});
+    if(html)NW.icons();
+  }
+  function tick(){
+    var S=NW.S;
+    if(!S.permanent&&S.premium&&S.proUntil&&Date.now()>=S.proUntil){
+      S.premium=false;S.proUntil=0;NW.save();
+      render();
+      if(typeof NW.renderHeader==='function')NW.renderHeader();
+      if(typeof NW.renderWallet==='function')NW.renderWallet();
+      if(typeof NW.renderProfile==='function')NW.renderProfile();
+      NW.toast('Masa Premium 7 Hari kamu sudah berakhir. Silakan klaim ulang kode Pro.','err');
+      return;
+    }
+    render();
+  }
+  tick();
+  setInterval(tick,1000);
+  NW.renderCountdown=render;
+})();
+</script>
+
+<script>
+/* ===== 7. INTRO AUDIO + BOOT ===== */
+(function(){
+  var full='Welcome to NusaWebGame';
+  var titleEl=document.getElementById('introTitle'),bar=document.getElementById('introBar'),pct=document.getElementById('introPct');
+  var hidden=false;
+  function hideIntro(sound){
+    if(hidden)return;hidden=true;
+    document.getElementById('intro').classList.add('done');
+    document.getElementById('app').classList.remove('app-hidden');
+    setTimeout(function(){document.getElementById('intro').style.display='none';},480);
+    if('Notification' in window && Notification.permission==='default'){try{Notification.requestPermission().catch(function(){});}catch(e){}}
+    NW.renderHeader();NW.renderGreet();NW.renderWallet();NW.renderTools();NW.renderGames();
+    NW.icons();
+  }
+  var i=0;var iv=setInterval(function(){i++;titleEl.textContent=full.slice(0,i);if(i>=full.length)clearInterval(iv);},85);
+  var start=Date.now(),dur=2600;
+  var pv=setInterval(function(){var p=Math.min(1,(Date.now()-start)/dur);bar.style.width=(p*100).toFixed(0)+'%';pct.textContent=(p*100).toFixed(0)+'%';if(p>=1){clearInterval(pv);}},80);
+  document.getElementById('introEnter').addEventListener('click',function(){
+    NW.speak('Welcome to NusaWebGame versi 1.4. Selamat berkreasi!');NW.beep(720);setTimeout(function(){NW.beep(980);},220);
+    hideIntro(true);
+  });
+  setTimeout(function(){hideIntro(false);},5000);
+})();
+</script>
+</body>
+</html>
